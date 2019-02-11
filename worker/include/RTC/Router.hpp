@@ -59,6 +59,11 @@ namespace RTC
 		void OnTransportConsumerProducerClosed(RTC::Transport* transport, RTC::Consumer* consumer) override;
 		void OnTransportConsumerKeyFrameRequested(
 		  RTC::Transport* transport, RTC::Consumer* consumer, uint32_t mappedSsrc) override;
+		void OnTransportConsumerFractionLost(
+		  RTC::Transport* transport,
+		  RTC::Consumer* consumer,
+		  uint32_t mappedSsrc,
+		  uint8_t fractionLost) override;
 
 	public:
 		// Passed by argument.

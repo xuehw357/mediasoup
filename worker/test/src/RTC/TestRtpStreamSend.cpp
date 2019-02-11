@@ -17,13 +17,17 @@ SCENARIO("NACK and RTP packets retransmission", "[rtp][rtcp]")
 		{
 		}
 
-		void OnRtpStreamRetransmitRtpPacket(RTC::RtpStreamSend* /*rtpStream*/, RTC::RtpPacket* packet) override
+		void OnRtpStreamRetransmitRtpPacket(RtpStreamSend* /*rtpStream*/, RtpPacket* packet) override
 		{
 			this->retransmittedPackets.push_back(packet);
 		}
 
+		void OnRtpStreamFractionLost(RtpStreamSend* /*rtpStream*/, uint8_t /*fractionLost*/) override
+		{
+		}
+
 	public:
-		std::vector<RTC::RtpPacket*> retransmittedPackets;
+		std::vector<RtpPacket*> retransmittedPackets;
 	};
 
 	TestRtpStreamListener testRtpStreamListener;

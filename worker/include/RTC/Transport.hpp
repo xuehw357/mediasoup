@@ -50,6 +50,11 @@ namespace RTC
 			  RTC::Transport* transport, RTC::Consumer* consumer) = 0;
 			virtual void OnTransportConsumerKeyFrameRequested(
 			  RTC::Transport* transport, RTC::Consumer* consumer, uint32_t mappedSsrc) = 0;
+			virtual void OnTransportConsumerFractionLost(
+			  RTC::Transport* transport,
+			  RTC::Consumer* consumer,
+			  uint32_t mappedSsrc,
+			  uint8_t fractionLost) = 0;
 		};
 
 	public:
@@ -99,6 +104,8 @@ namespace RTC
 	public:
 		void OnConsumerSendRtpPacket(RTC::Consumer* consumer, RTC::RtpPacket* packet) override;
 		void OnConsumerKeyFrameRequested(RTC::Consumer* consumer, uint32_t mappedSsrc) override;
+		void OnConsumerFractionLost(
+		  RTC::Consumer* consumer, uint32_t mappedSsrc, uint8_t fractionLost) override;
 		void onConsumerProducerClosed(RTC::Consumer* consumer) override;
 
 		/* Pure virtual methods inherited from Timer::Listener. */

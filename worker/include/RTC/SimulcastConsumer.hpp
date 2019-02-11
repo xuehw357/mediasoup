@@ -49,6 +49,7 @@ namespace RTC
 	public:
 		void OnRtpStreamScore(RTC::RtpStream* rtpStream, uint8_t score) override;
 		void OnRtpStreamRetransmitRtpPacket(RTC::RtpStreamSend* rtpStream, RTC::RtpPacket* packet) override;
+		void OnRtpStreamFractionLost(RTC::RtpStreamSend* rtpStream, uint8_t fractionLost) override;
 
 	private:
 		// Allocated by this.

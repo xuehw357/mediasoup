@@ -15,7 +15,8 @@ namespace RTC
 		{
 		public:
 			virtual void OnRtpStreamRetransmitRtpPacket(
-			  RTC::RtpStreamSend* rtpStream, RTC::RtpPacket* packet) = 0;
+			  RTC::RtpStreamSend* rtpStream, RTC::RtpPacket* packet)                                  = 0;
+			virtual void OnRtpStreamFractionLost(RTC::RtpStreamSend* rtpStream, uint8_t fractionLost) = 0;
 		};
 
 	private:

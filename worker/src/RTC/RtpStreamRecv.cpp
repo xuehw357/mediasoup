@@ -156,6 +156,12 @@ namespace RTC
 	{
 		MS_TRACE();
 
+		// TODO: in band FEC stuff.
+		// if (this->params.useInBandFec)
+		// {
+		// 	use this->worstRemoteFractionLost somehow
+		// }
+
 		auto report = new RTC::RTCP::ReceiverReport();
 
 		report->SetSsrc(GetSsrc());
@@ -204,6 +210,9 @@ namespace RTC
 			report->SetDelaySinceLastSenderReport(0);
 			report->SetLastSenderReport(0);
 		}
+
+		// Reset worstRemoteFractionLost.
+		this->worstRemoteFractionLost = 0;
 
 		return report;
 	}
@@ -259,6 +268,25 @@ namespace RTC
 
 			// Notify the listener.
 			static_cast<RTC::RtpStreamRecv::Listener*>(this->listener)->OnRtpStreamSendRtcpPacket(this, &packet);
+		}
+	}
+
+	void RtpStreamRecv::ReceiveRemoteFractionLost(uint8_t fractionLost)
+	{
+		MS_TRACE();
+
+		if (!this->params.useInBandFec)
+		{
+			MS_DEBUG_TAG(rtcp, "in band FEC not supported");
+
+			return;
+		}
+
+		if (fractionLost > this->worstRemoteFractionLost)
+		{
+			MS_DEBUG_TAG(rtcp, "updating worst remote fraction lost to %" PRIu8, fractionLost);
+
+			this->worstRemoteFractionLost = fractionLost;
 		}
 	}
 

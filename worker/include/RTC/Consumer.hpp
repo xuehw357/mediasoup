@@ -25,7 +25,9 @@ namespace RTC
 		public:
 			virtual void OnConsumerSendRtpPacket(RTC::Consumer* consumer, RTC::RtpPacket* packet)  = 0;
 			virtual void OnConsumerKeyFrameRequested(RTC::Consumer* consumer, uint32_t mappedSsrc) = 0;
-			virtual void onConsumerProducerClosed(RTC::Consumer* consumer)                         = 0;
+			virtual void OnConsumerFractionLost(
+			  RTC::Consumer* consumer, uint32_t mappedSsrc, uint8_t fractionLost) = 0;
+			virtual void onConsumerProducerClosed(RTC::Consumer* consumer)        = 0;
 		};
 
 	public:

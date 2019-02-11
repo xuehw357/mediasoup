@@ -47,6 +47,7 @@ namespace RTC
 			bool useNack{ false };
 			bool usePli{ false };
 			bool useFir{ false };
+			bool useInBandFec{ false };
 		};
 
 	public:

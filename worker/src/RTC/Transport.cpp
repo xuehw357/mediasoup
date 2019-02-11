@@ -833,6 +833,14 @@ namespace RTC
 		this->listener->OnTransportConsumerKeyFrameRequested(this, consumer, mappedSsrc);
 	}
 
+	inline void Transport::OnConsumerFractionLost(
+	  RTC::Consumer* consumer, uint32_t mappedSsrc, uint8_t fractionLost)
+	{
+		MS_TRACE();
+
+		this->listener->OnTransportConsumerFractionLost(this, consumer, mappedSsrc, fractionLost);
+	}
+
 	inline void Transport::onConsumerProducerClosed(RTC::Consumer* consumer)
 	{
 		MS_TRACE();

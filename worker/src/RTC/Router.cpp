@@ -634,4 +634,15 @@ namespace RTC
 
 		producer->RequestKeyFrame(mappedSsrc);
 	}
+
+	inline void Router::OnTransportConsumerFractionLost(
+	  RTC::Transport* transport, RTC::Consumer* consumer, uint32_t mappedSsrc, uint8_t fractionLost)
+	{
+		MS_TRACE();
+
+		auto mapConsumerProducerIt = this->mapConsumerProducer.find(consumer);
+		auto* producer             = mapConsumerProducerIt->second;
+
+		producer->ReceiveRemoteFractionLost(mappedSsrc, fractionLost);
+	}
 } // namespace RTC

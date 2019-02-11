@@ -147,6 +147,13 @@ namespace RTC
 
 		// Update the score with the received RR.
 		UpdateScore(report);
+
+		// If we use in band FEC notify it to the listener.
+		if (this->params.useInBandFec)
+		{
+			static_cast<RTC::RtpStreamSend::Listener*>(this->listener)
+			  ->OnRtpStreamFractionLost(this, this->fractionLost);
+		}
 	}
 
 	RTC::RTCP::SenderReport* RtpStreamSend::GetRtcpSenderReport(uint64_t now)

@@ -30,6 +30,7 @@ namespace RTC
 		RTC::RTCP::ReceiverReport* GetRtcpReceiverReport();
 		void ReceiveRtcpSenderReport(RTC::RTCP::SenderReport* report);
 		void RequestKeyFrame();
+		void ReceiveRemoteFractionLost(uint8_t fractionLost);
 		void Pause() override;
 		void Resume() override;
 
@@ -58,6 +59,7 @@ namespace RTC
 		uint8_t firSeqNumber{ 0 };
 		std::unique_ptr<RTC::NackGenerator> nackGenerator;
 		Timer* inactivityCheckPeriodicTimer{ nullptr };
+		uint8_t worstRemoteFractionLost{ 0 };
 	};
 } // namespace RTC
 

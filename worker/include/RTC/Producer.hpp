@@ -66,13 +66,14 @@ namespace RTC
 		std::map<RTC::RtpStreamRecv*, uint32_t>& GetRtpStreams();
 		void ReceiveRtpPacket(RTC::RtpPacket* packet);
 		void ReceiveRtcpSenderReport(RTC::RTCP::SenderReport* report);
+		void ReceiveRemoteFractionLost(uint32_t mappedSsrc, uint8_t fractionLost);
 		void GetRtcp(RTC::RTCP::CompoundPacket* packet, uint64_t now);
 		void RequestKeyFrame(uint32_t mappedSsrc);
 
 	private:
 		RTC::RtpStreamRecv* GetRtpStream(RTC::RtpPacket* packet);
 		RTC::RtpStreamRecv* CreateRtpStream(
-		  uint32_t ssrc, const RTC::RtpCodecParameters& codec, size_t encodingIdx);
+		  uint32_t ssrc, const RTC::RtpCodecParameters& mediaCodec, size_t encodingIdx);
 		bool MangleRtpPacket(RTC::RtpPacket* packet, RTC::RtpStreamRecv* rtpStream) const;
 		void EmitScore() const;
 

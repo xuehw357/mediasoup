@@ -516,6 +516,8 @@ namespace RTC
 
 	void Producer::ReceiveRtcpSenderReport(RTC::RTCP::SenderReport* report)
 	{
+		MS_TRACE();
+
 		auto it = this->mapSsrcRtpStream.find(report->GetSsrc());
 
 		if (it == this->mapSsrcRtpStream.end())
@@ -530,8 +532,29 @@ namespace RTC
 		rtpStream->ReceiveRtcpSenderReport(report);
 	}
 
+	void Producer::ReceiveRemoteFractionLost(uint32_t mappedSsrc, uint8_t fractionLost)
+	{
+		MS_TRACE();
+
+		auto it = this->mapMappedSsrcSsrc.find(mappedSsrc);
+
+		if (it == this->mapMappedSsrcSsrc.end())
+		{
+			MS_WARN_TAG(rtcp, "given mappedSsrc not found, ignoring");
+
+			return;
+		}
+
+		auto ssrc       = it->second;
+		auto* rtpStream = this->mapSsrcRtpStream.at(ssrc);
+
+		rtpStream->ReceiveRemoteFractionLost(fractionLost);
+	}
+
 	void Producer::GetRtcp(RTC::RTCP::CompoundPacket* packet, uint64_t now)
 	{
+		MS_TRACE();
+
 		if (static_cast<float>((now - this->lastRtcpSentTime) * 1.15) < this->maxRtcpInterval)
 			return;
 
@@ -726,7 +749,7 @@ namespace RTC
 	}
 
 	RTC::RtpStreamRecv* Producer::CreateRtpStream(
-	  uint32_t ssrc, const RTC::RtpCodecParameters& codec, size_t encodingIdx)
+	  uint32_t ssrc, const RTC::RtpCodecParameters& mediaCodec, size_t encodingIdx)
 	{
 		MS_TRACE();
 
@@ -740,13 +763,20 @@ namespace RTC
 		RTC::RtpStream::Params params;
 
 		params.ssrc        = ssrc;
-		params.payloadType = codec.payloadType;
-		params.mimeType    = codec.mimeType;
-		params.clockRate   = codec.clockRate;
+		params.payloadType = mediaCodec.payloadType;
+		params.mimeType    = mediaCodec.mimeType;
+		params.clockRate   = mediaCodec.clockRate;
 		params.rid         = encoding.rid;
 		params.cname       = this->rtpParameters.rtcp.cname;
 
-		for (auto& fb : codec.rtcpFeedback)
+		if (mediaCodec.parameters.HasInteger("useinbandfec") && mediaCodec.parameters.GetInteger("useinbandfec") == 1)
+		{
+			MS_DEBUG_TAG(rtcp, "in band FEC supported");
+
+			params.useInBandFec = true;
+		}
+
+		for (auto& fb : mediaCodec.rtcpFeedback)
 		{
 			if (!params.useNack && fb.type == "nack")
 			{

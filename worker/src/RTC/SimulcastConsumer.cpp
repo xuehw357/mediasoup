@@ -342,6 +342,8 @@ namespace RTC
 
 	float SimulcastConsumer::GetLossPercentage() const
 	{
+		MS_TRACE();
+
 		if (!IsActive() || !this->producerRtpStream)
 			return 0;
 
@@ -414,6 +416,13 @@ namespace RTC
 		params.mimeType    = mediaCodec->mimeType;
 		params.clockRate   = mediaCodec->clockRate;
 		params.cname       = this->rtpParameters.rtcp.cname;
+
+		if (mediaCodec->parameters.HasInteger("useinbandfec") && mediaCodec->parameters.GetInteger("useinbandfec") == 1)
+		{
+			MS_DEBUG_TAG(rtcp, "in band FEC supported");
+
+			params.useInBandFec = true;
+		}
 
 		for (auto& fb : mediaCodec->rtcpFeedback)
 		{
@@ -635,6 +644,8 @@ namespace RTC
 
 	inline bool SimulcastConsumer::IsProbing() const
 	{
+		MS_TRACE();
+
 		return this->probationPackets != 0;
 	}
 
@@ -701,5 +712,15 @@ namespace RTC
 		MS_TRACE();
 
 		this->listener->OnConsumerSendRtpPacket(this, packet);
+	}
+
+	inline void SimulcastConsumer::OnRtpStreamFractionLost(
+	  RTC::RtpStreamSend* rtpStream, uint8_t fractionLost)
+	{
+		MS_TRACE();
+
+		auto mappedSsrc = this->consumableRtpEncodings[0].ssrc;
+
+		this->listener->OnConsumerFractionLost(this, mappedSsrc, fractionLost);
 	}
 } // namespace RTC

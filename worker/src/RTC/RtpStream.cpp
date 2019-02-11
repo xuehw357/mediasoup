@@ -407,8 +407,9 @@ namespace RTC
 			jsonObject["rtxPayloadType"] = this->rtxPayloadType;
 		}
 
-		jsonObject["useNack"] = this->useNack;
-		jsonObject["usePli"]  = this->usePli;
-		jsonObject["useFir"]  = this->useFir;
+		jsonObject["useNack"]      = this->useNack;
+		jsonObject["usePli"]       = this->usePli;
+		jsonObject["useFir"]       = this->useFir;
+		jsonObject["useInBandFec"] = this->useInBandFec;
 	}
 } // namespace RTC
