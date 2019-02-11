@@ -394,10 +394,9 @@ namespace RTC
 		}
 
 		// Create a RtpStreamSend for sending a single media stream.
-		if (params.useNack)
-			this->rtpStream = new RTC::RtpStreamSend(this, params, 1500);
-		else
-			this->rtpStream = new RTC::RtpStreamSend(this, params, 0);
+		size_t bufferSize = params.useNack ? 1500 : 0;
+
+		this->rtpStream = new RTC::RtpStreamSend(this, params, bufferSize);
 
 		// If the Consumer is paused, tell the RtpStreamSend.
 		if (IsPaused() || IsProducerPaused())
