@@ -301,6 +301,21 @@ namespace RTC
 		this->lastRtcpSentTime = now;
 	}
 
+	void SimulcastConsumer::NeedWorstRemoteFractionLost(
+	  uint32_t /*mappedSsrc*/, uint8_t& worstRemoteFractionLost)
+	{
+		MS_TRACE();
+
+		if (!IsActive())
+			return;
+
+		auto fractionLost = this->rtpStream->GetFractionLost();
+
+		// If our fraction lost is worse than the given one, update it.
+		if (fractionLost > worstRemoteFractionLost)
+			worstRemoteFractionLost = fractionLost;
+	}
+
 	void SimulcastConsumer::ReceiveNack(RTC::RTCP::FeedbackRtpNackPacket* nackPacket)
 	{
 		MS_TRACE();
@@ -712,15 +727,5 @@ namespace RTC
 		MS_TRACE();
 
 		this->listener->OnConsumerSendRtpPacket(this, packet);
-	}
-
-	inline void SimulcastConsumer::OnRtpStreamFractionLost(
-	  RTC::RtpStreamSend* rtpStream, uint8_t fractionLost)
-	{
-		MS_TRACE();
-
-		auto mappedSsrc = this->consumableRtpEncodings[0].ssrc;
-
-		this->listener->OnConsumerFractionLost(this, mappedSsrc, fractionLost);
 	}
 } // namespace RTC

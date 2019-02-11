@@ -33,6 +33,8 @@ namespace RTC
 			  RTC::Producer* producer, RTC::RtpStream* rtpStream, uint8_t score)                      = 0;
 			virtual void OnProducerRtpPacketReceived(RTC::Producer* producer, RTC::RtpPacket* packet) = 0;
 			virtual void OnProducerSendRtcpPacket(RTC::Producer* producer, RTC::RTCP::Packet* packet) = 0;
+			virtual void OnProducerNeedWorstRemoteFractionLost(
+			  RTC::Producer* producer, uint32_t mappedSsrc, uint8_t& worstRemoteFractionLost) = 0;
 		};
 
 	private:
@@ -66,7 +68,6 @@ namespace RTC
 		std::map<RTC::RtpStreamRecv*, uint32_t>& GetRtpStreams();
 		void ReceiveRtpPacket(RTC::RtpPacket* packet);
 		void ReceiveRtcpSenderReport(RTC::RTCP::SenderReport* report);
-		void ReceiveRemoteFractionLost(uint32_t mappedSsrc, uint8_t fractionLost);
 		void GetRtcp(RTC::RTCP::CompoundPacket* packet, uint64_t now);
 		void RequestKeyFrame(uint32_t mappedSsrc);
 
@@ -81,6 +82,8 @@ namespace RTC
 	public:
 		void OnRtpStreamScore(RTC::RtpStream* rtpStream, uint8_t score) override;
 		void OnRtpStreamSendRtcpPacket(RTC::RtpStreamRecv* rtpStream, RTC::RTCP::Packet* packet) override;
+		void OnRtpStreamNeedWorstRemoteFractionLost(
+		  RTC::RtpStreamRecv* rtpStream, uint8_t& worstRemoteFractionLost) override;
 
 		/* Pure virtual methods inherited from RTC::KeyFrameRequestManager::Listener. */
 	public:

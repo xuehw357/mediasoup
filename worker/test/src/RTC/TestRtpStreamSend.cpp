@@ -22,10 +22,6 @@ SCENARIO("NACK and RTP packets retransmission", "[rtp][rtcp]")
 			this->retransmittedPackets.push_back(packet);
 		}
 
-		void OnRtpStreamFractionLost(RtpStreamSend* /*rtpStream*/, uint8_t /*fractionLost*/) override
-		{
-		}
-
 	public:
 		std::vector<RtpPacket*> retransmittedPackets;
 	};

@@ -532,25 +532,6 @@ namespace RTC
 		rtpStream->ReceiveRtcpSenderReport(report);
 	}
 
-	void Producer::ReceiveRemoteFractionLost(uint32_t mappedSsrc, uint8_t fractionLost)
-	{
-		MS_TRACE();
-
-		auto it = this->mapMappedSsrcSsrc.find(mappedSsrc);
-
-		if (it == this->mapMappedSsrcSsrc.end())
-		{
-			MS_WARN_TAG(rtcp, "given mappedSsrc not found, ignoring");
-
-			return;
-		}
-
-		auto ssrc       = it->second;
-		auto* rtpStream = this->mapSsrcRtpStream.at(ssrc);
-
-		rtpStream->ReceiveRemoteFractionLost(fractionLost);
-	}
-
 	void Producer::GetRtcp(RTC::RTCP::CompoundPacket* packet, uint64_t now)
 	{
 		MS_TRACE();
@@ -910,6 +891,15 @@ namespace RTC
 	{
 		// Notify the listener.
 		this->listener->OnProducerSendRtcpPacket(this, packet);
+	}
+
+	inline void Producer::OnRtpStreamNeedWorstRemoteFractionLost(
+	  RTC::RtpStreamRecv* rtpStream, uint8_t& worstRemoteFractionLost)
+	{
+		auto mappedSsrc = this->mapRtpStreamMappedSsrc.at(rtpStream);
+
+		// Notify the listener.
+		this->listener->OnProducerNeedWorstRemoteFractionLost(this, mappedSsrc, worstRemoteFractionLost);
 	}
 
 	inline void Producer::OnKeyFrameNeeded(

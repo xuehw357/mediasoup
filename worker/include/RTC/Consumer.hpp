@@ -25,9 +25,7 @@ namespace RTC
 		public:
 			virtual void OnConsumerSendRtpPacket(RTC::Consumer* consumer, RTC::RtpPacket* packet)  = 0;
 			virtual void OnConsumerKeyFrameRequested(RTC::Consumer* consumer, uint32_t mappedSsrc) = 0;
-			virtual void OnConsumerFractionLost(
-			  RTC::Consumer* consumer, uint32_t mappedSsrc, uint8_t fractionLost) = 0;
-			virtual void onConsumerProducerClosed(RTC::Consumer* consumer)        = 0;
+			virtual void onConsumerProducerClosed(RTC::Consumer* consumer)                         = 0;
 		};
 
 	public:
@@ -53,8 +51,9 @@ namespace RTC
 		virtual void ProducerNewRtpStream(RTC::RtpStream* rtpStream, uint32_t mappedSsrc) = 0;
 		virtual void ProducerRtpStreamScore(RTC::RtpStream* rtpStream, uint8_t score)     = 0;
 		void ProducerClosed();
-		virtual void SendRtpPacket(RTC::RtpPacket* packet)                                  = 0;
-		virtual void GetRtcp(RTC::RTCP::CompoundPacket* packet, uint64_t now)               = 0;
+		virtual void SendRtpPacket(RTC::RtpPacket* packet)                    = 0;
+		virtual void GetRtcp(RTC::RTCP::CompoundPacket* packet, uint64_t now) = 0;
+		virtual void NeedWorstRemoteFractionLost(uint32_t mappedSsrc, uint8_t& worstRemoteFractionLost) = 0;
 		virtual void ReceiveNack(RTC::RTCP::FeedbackRtpNackPacket* nackPacket)              = 0;
 		virtual void ReceiveKeyFrameRequest(RTC::RTCP::FeedbackPs::MessageType messageType) = 0;
 		virtual void ReceiveRtcpReceiverReport(RTC::RTCP::ReceiverReport* report)           = 0;

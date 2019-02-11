@@ -23,6 +23,7 @@ namespace RTC
 		void ProducerRtpStreamScore(RTC::RtpStream* rtpStream, uint8_t score) override;
 		void SendRtpPacket(RTC::RtpPacket* packet) override;
 		void GetRtcp(RTC::RTCP::CompoundPacket* packet, uint64_t now) override;
+		void NeedWorstRemoteFractionLost(uint32_t mappedSsrc, uint8_t& worstRemoteFractionLost) override;
 		void ReceiveNack(RTC::RTCP::FeedbackRtpNackPacket* nackPacket) override;
 		void ReceiveKeyFrameRequest(RTC::RTCP::FeedbackPs::MessageType messageType) override;
 		void ReceiveRtcpReceiverReport(RTC::RTCP::ReceiverReport* report) override;
@@ -49,7 +50,6 @@ namespace RTC
 	public:
 		void OnRtpStreamScore(RTC::RtpStream* rtpStream, uint8_t score) override;
 		void OnRtpStreamRetransmitRtpPacket(RTC::RtpStreamSend* rtpStream, RTC::RtpPacket* packet) override;
-		void OnRtpStreamFractionLost(RTC::RtpStreamSend* rtpStream, uint8_t fractionLost) override;
 
 	private:
 		// Allocated by this.

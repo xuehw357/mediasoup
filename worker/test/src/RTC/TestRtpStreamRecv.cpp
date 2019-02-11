@@ -102,6 +102,11 @@ SCENARIO("receive RTP packets and trigger NACK", "[rtp][rtpstream]")
 			}
 		}
 
+		void OnRtpStreamNeedWorstRemoteFractionLost(
+		  RTC::RtpStreamRecv* /*rtpStream*/, uint8_t& /*worstRemoteFractionLost*/) override
+		{
+		}
+
 	public:
 		bool shouldTriggerNack = false;
 		bool shouldTriggerPLI  = false;

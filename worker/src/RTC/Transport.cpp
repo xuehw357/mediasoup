@@ -819,6 +819,15 @@ namespace RTC
 		SendRtcpPacket(packet);
 	}
 
+	inline void Transport::OnProducerNeedWorstRemoteFractionLost(
+	  RTC::Producer* producer, uint32_t mappedSsrc, uint8_t& worstRemoteFractionLost)
+	{
+		MS_TRACE();
+
+		this->listener->OnTransportNeedWorstRemoteFractionLost(
+		  this, producer, mappedSsrc, worstRemoteFractionLost);
+	}
+
 	inline void Transport::OnConsumerSendRtpPacket(RTC::Consumer* /*consumer*/, RTC::RtpPacket* packet)
 	{
 		MS_TRACE();
@@ -831,14 +840,6 @@ namespace RTC
 		MS_TRACE();
 
 		this->listener->OnTransportConsumerKeyFrameRequested(this, consumer, mappedSsrc);
-	}
-
-	inline void Transport::OnConsumerFractionLost(
-	  RTC::Consumer* consumer, uint32_t mappedSsrc, uint8_t fractionLost)
-	{
-		MS_TRACE();
-
-		this->listener->OnTransportConsumerFractionLost(this, consumer, mappedSsrc, fractionLost);
 	}
 
 	inline void Transport::onConsumerProducerClosed(RTC::Consumer* consumer)

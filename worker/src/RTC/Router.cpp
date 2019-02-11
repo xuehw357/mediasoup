@@ -529,6 +529,22 @@ namespace RTC
 		}
 	}
 
+	inline void Router::OnTransportNeedWorstRemoteFractionLost(
+	  RTC::Transport* /*transport*/,
+	  RTC::Producer* producer,
+	  uint32_t mappedSsrc,
+	  uint8_t& worstRemoteFractionLost)
+	{
+		MS_TRACE();
+
+		auto& consumers = this->mapProducerConsumers.at(producer);
+
+		for (auto* consumer : consumers)
+		{
+			consumer->NeedWorstRemoteFractionLost(mappedSsrc, worstRemoteFractionLost);
+		}
+	}
+
 	inline void Router::OnTransportNewConsumer(
 	  RTC::Transport* /*transport*/, RTC::Consumer* consumer, std::string& producerId)
 	{
@@ -633,16 +649,5 @@ namespace RTC
 		auto* producer             = mapConsumerProducerIt->second;
 
 		producer->RequestKeyFrame(mappedSsrc);
-	}
-
-	inline void Router::OnTransportConsumerFractionLost(
-	  RTC::Transport* transport, RTC::Consumer* consumer, uint32_t mappedSsrc, uint8_t fractionLost)
-	{
-		MS_TRACE();
-
-		auto mapConsumerProducerIt = this->mapConsumerProducer.find(consumer);
-		auto* producer             = mapConsumerProducerIt->second;
-
-		producer->ReceiveRemoteFractionLost(mappedSsrc, fractionLost);
 	}
 } // namespace RTC

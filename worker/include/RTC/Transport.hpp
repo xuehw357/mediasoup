@@ -43,6 +43,11 @@ namespace RTC
 			  uint8_t score) = 0;
 			virtual void OnTransportProducerRtpPacketReceived(
 			  RTC::Transport* transport, RTC::Producer* producer, RTC::RtpPacket* packet) = 0;
+			virtual void OnTransportNeedWorstRemoteFractionLost(
+			  RTC::Transport* transport,
+			  RTC::Producer* producer,
+			  uint32_t mappedSsrc,
+			  uint8_t& worstRemoteFractionLost) = 0;
 			virtual void OnTransportNewConsumer(
 			  RTC::Transport* transport, RTC::Consumer* consumer, std::string& producerId) = 0;
 			virtual void OnTransportConsumerClosed(RTC::Transport* transport, RTC::Consumer* consumer) = 0;
@@ -50,11 +55,6 @@ namespace RTC
 			  RTC::Transport* transport, RTC::Consumer* consumer) = 0;
 			virtual void OnTransportConsumerKeyFrameRequested(
 			  RTC::Transport* transport, RTC::Consumer* consumer, uint32_t mappedSsrc) = 0;
-			virtual void OnTransportConsumerFractionLost(
-			  RTC::Transport* transport,
-			  RTC::Consumer* consumer,
-			  uint32_t mappedSsrc,
-			  uint8_t fractionLost) = 0;
 		};
 
 	public:
@@ -99,13 +99,13 @@ namespace RTC
 		  RTC::Producer* producer, RTC::RtpStream* rtpStream, uint8_t score) override;
 		void OnProducerRtpPacketReceived(RTC::Producer* producer, RTC::RtpPacket* packet) override;
 		void OnProducerSendRtcpPacket(RTC::Producer* producer, RTC::RTCP::Packet* packet) override;
+		void OnProducerNeedWorstRemoteFractionLost(
+		  RTC::Producer* producer, uint32_t mappedSsrc, uint8_t& worstRemoteFractionLost) override;
 
 		/* Pure virtual methods inherited from RTC::Consumer::Listener. */
 	public:
 		void OnConsumerSendRtpPacket(RTC::Consumer* consumer, RTC::RtpPacket* packet) override;
 		void OnConsumerKeyFrameRequested(RTC::Consumer* consumer, uint32_t mappedSsrc) override;
-		void OnConsumerFractionLost(
-		  RTC::Consumer* consumer, uint32_t mappedSsrc, uint8_t fractionLost) override;
 		void onConsumerProducerClosed(RTC::Consumer* consumer) override;
 
 		/* Pure virtual methods inherited from Timer::Listener. */

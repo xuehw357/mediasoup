@@ -70,6 +70,7 @@ namespace RTC
 		virtual void Pause()  = 0;
 		virtual void Resume() = 0;
 		uint32_t GetRate(uint64_t now);
+		uint8_t GetFractionLost() const;
 		float GetLossPercentage() const;
 		uint64_t GetMaxPacketMs() const;
 		uint8_t GetScore() const;
@@ -176,6 +177,11 @@ namespace RTC
 	inline uint32_t RtpStream::GetRate(uint64_t now)
 	{
 		return this->transmissionCounter.GetRate(now) + this->retransmissionCounter.GetRate(now);
+	}
+
+	inline uint8_t RtpStream::GetFractionLost() const
+	{
+		return this->fractionLost;
 	}
 
 	inline float RtpStream::GetLossPercentage() const

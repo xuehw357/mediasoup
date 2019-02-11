@@ -48,6 +48,11 @@ namespace RTC
 		  uint32_t mappedSsrc) override;
 		void OnTransportProducerRtpPacketReceived(
 		  RTC::Transport* transport, RTC::Producer* producer, RTC::RtpPacket* packet) override;
+		void OnTransportNeedWorstRemoteFractionLost(
+		  RTC::Transport* transport,
+		  RTC::Producer* producer,
+		  uint32_t mappedSsrc,
+		  uint8_t& worstRemoteFractionLost) override;
 		void OnTransportProducerRtpStreamScore(
 		  RTC::Transport* transport,
 		  RTC::Producer* producer,
@@ -59,11 +64,6 @@ namespace RTC
 		void OnTransportConsumerProducerClosed(RTC::Transport* transport, RTC::Consumer* consumer) override;
 		void OnTransportConsumerKeyFrameRequested(
 		  RTC::Transport* transport, RTC::Consumer* consumer, uint32_t mappedSsrc) override;
-		void OnTransportConsumerFractionLost(
-		  RTC::Transport* transport,
-		  RTC::Consumer* consumer,
-		  uint32_t mappedSsrc,
-		  uint8_t fractionLost) override;
 
 	public:
 		// Passed by argument.
