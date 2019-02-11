@@ -2,8 +2,6 @@
 #define MS_RTC_RTP_STREAM_RECV_HPP
 
 #include "RTC/NackGenerator.hpp"
-#include "RTC/RTCP/ReceiverReport.hpp"
-#include "RTC/RTCP/SenderReport.hpp"
 #include "RTC/RtpStream.hpp"
 #include "handles/Timer.hpp"
 #include <vector>
@@ -15,17 +13,7 @@ namespace RTC
 	                      public Timer::Listener
 	{
 	public:
-		class Listener : public RtpStream::Listener
-		{
-		public:
-			virtual void OnRtpStreamRecvNackRequired(
-			  RTC::RtpStreamRecv* rtpStream, const std::vector<uint16_t>& seqNumbers) = 0;
-			virtual void OnRtpStreamRecvPliRequired(RTC::RtpStreamRecv* rtpStream)    = 0;
-			virtual void OnRtpStreamRecvFirRequired(RTC::RtpStreamRecv* rtpStream)    = 0;
-		};
-
-	public:
-		RtpStreamRecv(Listener* listener, RTC::RtpStream::Params& params);
+		RtpStreamRecv(RTC::RtpStream::Listener* listener, RTC::RtpStream::Params& params);
 		~RtpStreamRecv();
 
 		void FillJsonStats(json& jsonObject) override;
@@ -36,7 +24,6 @@ namespace RTC
 		void RequestKeyFrame();
 		void Pause() override;
 		void Resume() override;
-		uint8_t GetFirSeqNumber();
 
 	private:
 		void CalculateJitter(uint32_t rtpTimestamp);
@@ -51,9 +38,6 @@ namespace RTC
 		void OnNackGeneratorKeyFrameRequired() override;
 
 	private:
-		// Passed by argument.
-		Listener* listener{ nullptr };
-		// Others.
 		uint32_t expectedPrior{ 0 };   // Packet expected at last interval.
 		uint32_t receivedPrior{ 0 };   // Packet received at last interval.
 		uint32_t lastSrTimestamp{ 0 }; // The middle 32 bits out of 64 in the NTP
@@ -67,12 +51,6 @@ namespace RTC
 		std::unique_ptr<RTC::NackGenerator> nackGenerator;
 		Timer* inactivityCheckPeriodicTimer{ nullptr };
 	};
-
-	inline uint8_t RtpStreamRecv::GetFirSeqNumber()
-	{
-		// Increase and return it.
-		return ++this->firSeqNumber;
-	}
 } // namespace RTC
 
 #endif
