@@ -164,7 +164,7 @@ namespace RTC
 			{
 				delete uvHandle;
 
-				MS_THROW_ERROR("uv_xxx_init() failed: %s", uv_strerror(err));
+				MS_THROW_ERROR("uv_udp/tcp_init() failed: %s", uv_strerror(err));
 			}
 
 			switch (transport)
@@ -196,7 +196,7 @@ namespace RTC
 
 			// If it failed, check the reason.
 			MS_WARN_DEV(
-			  "uv_xxx_bind() failed [%s:%s, attempt:%zu]: %s",
+			  "uv_udp/tcp_bind() failed [%s:%s, attempt:%zu]: %s",
 			  transportStr.c_str(),
 			  ip.c_str(),
 			  attempt,
@@ -208,7 +208,7 @@ namespace RTC
 			if (err == UV_EMFILE)
 			{
 				MS_THROW_ERROR(
-				  "uv_xxx_bind() failed due to too many open files [%s:%s, attempt:%zu]",
+				  "uv_udp/tcp_bind() failed due to too many open files [%s:%s, attempt:%zu]",
 				  transportStr.c_str(),
 				  ip.c_str(),
 				  attempt);
@@ -217,7 +217,7 @@ namespace RTC
 			else if (err == UV_EADDRNOTAVAIL)
 			{
 				MS_THROW_ERROR(
-				  "uv_xxx_bind() failed due to address not available [%s:%s, attempt:%zu]",
+				  "uv_udp/tcp_bind() failed due to address not available [%s:%s, attempt:%zu]",
 				  transportStr.c_str(),
 				  ip.c_str(),
 				  attempt);
@@ -226,7 +226,7 @@ namespace RTC
 			else if (bindAttempt > MaxBindAttempts)
 			{
 				MS_THROW_ERROR(
-				  "uv_xxx_bind() failed too many times [%s:%s, attempt:%zu]",
+				  "uv_udp/tcp_bind() failed too many times [%s:%s, attempt:%zu]",
 				  transportStr.c_str(),
 				  ip.c_str(),
 				  attempt);
