@@ -36,14 +36,16 @@ namespace RTC
 				// STAP-A.
 				case 24:
 				{
-					size_t offset = 1;
+					size_t offset{ 1 };
+
 					len -= 1;
 
 					// Iterate NAL units.
 					while (len >= 3)
 					{
 						auto naluSize = Utils::Byte::Get2Bytes(data, offset);
-						nal           = *(data + offset + sizeof(naluSize)) & 0x1F;
+
+						nal = *(data + offset + sizeof(naluSize)) & 0x1F;
 
 						if (nal == 7)
 						{

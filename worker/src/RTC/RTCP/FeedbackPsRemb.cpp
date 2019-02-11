@@ -91,7 +91,7 @@ namespace RTC
 
 			this->ssrcs.reserve(numSsrcs);
 
-			for (size_t n = 0; n < numSsrcs; ++n)
+			for (size_t n{ 0 }; n < numSsrcs; ++n)
 			{
 				this->ssrcs.push_back(Utils::Byte::Get4Bytes(data, index));
 				index += sizeof(uint32_t);

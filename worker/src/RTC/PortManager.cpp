@@ -378,7 +378,7 @@ namespace RTC
 			(*jsonUdpIt)[ip] = json::array();
 			auto jsonIpIt    = jsonUdpIt->find(ip);
 
-			for (size_t i = 0; i < ports.size(); ++i)
+			for (size_t i{ 0 }; i < ports.size(); ++i)
 			{
 				if (!ports[i])
 					continue;
@@ -401,7 +401,7 @@ namespace RTC
 			(*jsonTcpIt)[ip] = json::array();
 			auto jsonIpIt    = jsonTcpIt->find(ip);
 
-			for (size_t i = 0; i < ports.size(); ++i)
+			for (size_t i{ 0 }; i < ports.size(); ++i)
 			{
 				if (!ports[i])
 					continue;

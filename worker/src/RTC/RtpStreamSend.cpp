@@ -131,7 +131,7 @@ namespace RTC
 		uint32_t dlsr   = report->GetDelaySinceLastSenderReport();
 
 		// RTT in 1/2^16 second fractions.
-		uint32_t rtt = 0;
+		uint32_t rtt{ 0 };
 
 		if (compactNtp > dlsr + lastSr)
 			rtt = compactNtp - dlsr - lastSr;

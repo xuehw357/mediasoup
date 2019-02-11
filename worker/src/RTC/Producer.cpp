@@ -234,7 +234,7 @@ namespace RTC
 		{
 			(*jsonRtpMappingIt)["codecs"] = json::array();
 			auto jsonCodecsIt             = jsonRtpMappingIt->find("codecs");
-			size_t idx                    = 0;
+			size_t idx{ 0 };
 
 			for (auto& kv : this->rtpMapping.codecs)
 			{
@@ -255,7 +255,7 @@ namespace RTC
 		{
 			(*jsonRtpMappingIt)["headerExtensions"] = json::array();
 			auto jsonHeaderExtensionsIt             = jsonRtpMappingIt->find("headerExtensions");
-			size_t idx                              = 0;
+			size_t idx{ 0 };
 
 			for (auto& kv : this->rtpMapping.headerExtensions)
 			{
@@ -277,7 +277,7 @@ namespace RTC
 			(*jsonRtpMappingIt)["encodings"] = json::array();
 			auto jsonEncodingsIt             = jsonRtpMappingIt->find("encodings");
 
-			for (size_t i = 0; i < this->rtpMapping.encodings.size(); ++i)
+			for (size_t i{ 0 }; i < this->rtpMapping.encodings.size(); ++i)
 			{
 				jsonEncodingsIt->emplace_back(json::value_t::object);
 
@@ -301,8 +301,8 @@ namespace RTC
 		// Add rtpStreams.
 		jsonObject["rtpStreams"] = json::array();
 		auto jsonRtpStreamsIt    = jsonObject.find("rtpStreams");
-		size_t rtpStreamIdx      = 0;
-		float lossPercentage     = 0;
+		size_t rtpStreamIdx{ 0 };
+		float lossPercentage{ 0 };
 
 		for (auto& kv : this->mapSsrcRtpStream)
 		{
@@ -331,7 +331,7 @@ namespace RTC
 	{
 		MS_TRACE();
 
-		size_t rtpStreamIdx = 0;
+		size_t rtpStreamIdx{ 0 };
 
 		for (auto& kv : this->mapSsrcRtpStream)
 		{
@@ -601,7 +601,7 @@ namespace RTC
 		// Otherwise check our encodings and, if appropriate, create a new stream.
 
 		// First, look for an encoding with matching media or RTX ssrc value.
-		for (size_t i = 0; i < this->rtpParameters.encodings.size(); ++i)
+		for (size_t i{ 0 }; i < this->rtpParameters.encodings.size(); ++i)
 		{
 			auto& encoding     = this->rtpParameters.encodings[i];
 			auto* mediaCodec   = this->rtpParameters.GetCodecForEncoding(encoding);
@@ -652,7 +652,7 @@ namespace RTC
 
 		if (packet->ReadRid(rid))
 		{
-			for (size_t i = 0; i < this->rtpParameters.encodings.size(); ++i)
+			for (size_t i{ 0 }; i < this->rtpParameters.encodings.size(); ++i)
 			{
 				auto& encoding = this->rtpParameters.encodings[i];
 

@@ -20,10 +20,10 @@ namespace TestFeedbackRtpNack
 	// clang-format on
 
 	// NACK values.
-	uint32_t senderSsrc        = 0x00000001;
-	uint32_t mediaSsrc         = 0x0330bdee;
-	uint16_t pid               = 2959;
-	uint16_t lostPacketBitmask = 0x0003;
+	uint32_t senderSsrc{ 0x00000001 };
+	uint32_t mediaSsrc{ 0x0330bdee };
+	uint16_t pid{ 2959 };
+	uint16_t lostPacketBitmask{ 0x0003 };
 
 	void verify(FeedbackRtpNackPacket* packet)
 	{

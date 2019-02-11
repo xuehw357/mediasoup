@@ -173,7 +173,7 @@ namespace RTC
 		jsonObject["codecs"] = json::array();
 		auto jsonCodecsIt    = jsonObject.find("codecs");
 
-		for (size_t i = 0; i < this->codecs.size(); ++i)
+		for (size_t i{ 0 }; i < this->codecs.size(); ++i)
 		{
 			jsonCodecsIt->emplace_back(json::value_t::object);
 
@@ -187,7 +187,7 @@ namespace RTC
 		jsonObject["encodings"] = json::array();
 		auto jsonEncodingsIt    = jsonObject.find("encodings");
 
-		for (size_t i = 0; i < this->encodings.size(); ++i)
+		for (size_t i{ 0 }; i < this->encodings.size(); ++i)
 		{
 			jsonEncodingsIt->emplace_back(json::value_t::object);
 
@@ -201,7 +201,7 @@ namespace RTC
 		jsonObject["headerExtensions"] = json::array();
 		auto jsonHeaderExtensionsIt    = jsonObject.find("headerExtensions");
 
-		for (size_t i = 0; i < this->headerExtensions.size(); ++i)
+		for (size_t i{ 0 }; i < this->headerExtensions.size(); ++i)
 		{
 			jsonHeaderExtensionsIt->emplace_back(json::value_t::object);
 
@@ -313,7 +313,7 @@ namespace RTC
 
 	void RtpParameters::ValidateEncodings()
 	{
-		uint8_t firstMediaPayloadType = 0;
+		uint8_t firstMediaPayloadType{ 0 };
 
 		{
 			auto it = this->codecs.begin();

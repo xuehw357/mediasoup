@@ -95,7 +95,7 @@ namespace RTC
 
 		std::vector<ListenIp> listenIps(jsonListenIpsIt->size());
 
-		for (size_t i = 0; i < jsonListenIpsIt->size(); ++i)
+		for (size_t i{ 0 }; i < jsonListenIpsIt->size(); ++i)
 		{
 			auto& jsonListenIp = (*jsonListenIpsIt)[i];
 			auto& listenIp     = listenIps[i];
@@ -128,7 +128,7 @@ namespace RTC
 
 		try
 		{
-			uint16_t iceLocalPreferenceDecrement = 0;
+			uint16_t iceLocalPreferenceDecrement{ 0 };
 
 			if (enableUdp && enableTcp)
 				this->iceCandidates.reserve(2 * jsonListenIpsIt->size());
@@ -278,7 +278,7 @@ namespace RTC
 		jsonObject["iceCandidates"] = json::array();
 		auto jsonIceCandidatesIt    = jsonObject.find("iceCandidates");
 
-		for (size_t i = 0; i < this->iceCandidates.size(); ++i)
+		for (size_t i{ 0 }; i < this->iceCandidates.size(); ++i)
 		{
 			jsonIceCandidatesIt->emplace_back(json::value_t::object);
 
@@ -318,7 +318,7 @@ namespace RTC
 		auto jsonDtlsParametersFingerprintsIt   = jsonDtlsParametersIt->find("fingerprints");
 		auto& fingerprints                      = this->dtlsTransport->GetLocalFingerprints();
 
-		for (size_t i = 0; i < fingerprints.size(); ++i)
+		for (size_t i{ 0 }; i < fingerprints.size(); ++i)
 		{
 			jsonDtlsParametersFingerprintsIt->emplace_back(json::value_t::object);
 

@@ -867,7 +867,7 @@ namespace RTC
 			if (!this->mapConsumers.empty())
 			{
 				// Transmission rate in kbps.
-				uint32_t rate = 0;
+				uint32_t rate{ 0 };
 
 				// Get the RTP sending rate.
 				for (auto& kv : this->mapConsumers)

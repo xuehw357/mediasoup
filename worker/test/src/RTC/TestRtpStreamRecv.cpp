@@ -80,7 +80,7 @@ SCENARIO("receive RTP packets and trigger NACK", "[rtp][rtpstream]")
 
 								this->nackedSeqNumbers.push_back(firstSeq);
 
-								for (size_t i = 1; i < MaxRequestedPackets; ++i)
+								for (size_t i{ 1 }; i < MaxRequestedPackets; ++i)
 								{
 									if ((bitmask & 1) != 0)
 										this->nackedSeqNumbers.push_back(firstSeq + i);

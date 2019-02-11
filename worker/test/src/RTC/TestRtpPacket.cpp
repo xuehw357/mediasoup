@@ -331,9 +331,9 @@ SCENARIO("parse RTP packets", "[parser][rtp]")
 		};
 		// clang-format on
 
-		uint8_t rtxPayloadType = 102;
-		uint32_t rtxSsrc       = 6;
-		uint16_t rtxSeq        = 80;
+		uint8_t rtxPayloadType{ 102 };
+		uint32_t rtxSsrc{ 6 };
+		uint16_t rtxSeq{ 80 };
 
 		RtpPacket* packet = RtpPacket::Parse(buffer, sizeof(buffer));
 

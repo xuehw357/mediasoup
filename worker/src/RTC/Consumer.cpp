@@ -56,7 +56,7 @@ namespace RTC
 
 		this->consumableRtpEncodings.reserve(jsonConsumableRtpEncodingsIt->size());
 
-		for (size_t i = 0; i < jsonConsumableRtpEncodingsIt->size(); ++i)
+		for (size_t i{ 0 }; i < jsonConsumableRtpEncodingsIt->size(); ++i)
 		{
 			auto& entry = (*jsonConsumableRtpEncodingsIt)[i];
 
@@ -114,7 +114,7 @@ namespace RTC
 		jsonObject["consumableRtpEncodings"] = json::array();
 		auto jsonConsumableRtpEncodingsIt    = jsonObject.find("consumableRtpEncodings");
 
-		for (size_t i = 0; i < this->consumableRtpEncodings.size(); ++i)
+		for (size_t i{ 0 }; i < this->consumableRtpEncodings.size(); ++i)
 		{
 			jsonConsumableRtpEncodingsIt->emplace_back(json::value_t::object);
 
