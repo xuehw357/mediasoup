@@ -51,6 +51,6 @@ namespace RTC
 		MS_TRACE();
 
 		this->listener->OnRtcTcpConnectionClosed(
-		  this, dynamic_cast<RTC::TcpConnection*>(connection), isClosedByPeer);
+		  this, static_cast<RTC::TcpConnection*>(connection), isClosedByPeer);
 	}
 } // namespace RTC

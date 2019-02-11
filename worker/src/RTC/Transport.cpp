@@ -420,7 +420,7 @@ namespace RTC
 		{
 			case RTC::RTCP::Type::RR:
 			{
-				auto* rr = dynamic_cast<RTC::RTCP::ReceiverReportPacket*>(packet);
+				auto* rr = static_cast<RTC::RTCP::ReceiverReportPacket*>(packet);
 				auto it  = rr->Begin();
 
 				for (; it != rr->End(); ++it)
@@ -446,7 +446,7 @@ namespace RTC
 
 			case RTC::RTCP::Type::PSFB:
 			{
-				auto* feedback = dynamic_cast<RTC::RTCP::FeedbackPsPacket*>(packet);
+				auto* feedback = static_cast<RTC::RTCP::FeedbackPsPacket*>(packet);
 
 				switch (feedback->GetMessageType())
 				{
@@ -484,12 +484,12 @@ namespace RTC
 
 					case RTC::RTCP::FeedbackPs::MessageType::AFB:
 					{
-						auto* afb = dynamic_cast<RTC::RTCP::FeedbackPsAfbPacket*>(feedback);
+						auto* afb = static_cast<RTC::RTCP::FeedbackPsAfbPacket*>(feedback);
 
 						// Store REMB info.
 						if (afb->GetApplication() == RTC::RTCP::FeedbackPsAfbPacket::Application::REMB)
 						{
-							auto* remb = dynamic_cast<RTC::RTCP::FeedbackPsRembPacket*>(afb);
+							auto* remb = static_cast<RTC::RTCP::FeedbackPsRembPacket*>(afb);
 
 							this->availableOutgoingBitrate = remb->GetBitrate();
 
@@ -526,7 +526,7 @@ namespace RTC
 
 			case RTC::RTCP::Type::RTPFB:
 			{
-				auto* feedback = dynamic_cast<RTC::RTCP::FeedbackRtpPacket*>(packet);
+				auto* feedback = static_cast<RTC::RTCP::FeedbackRtpPacket*>(packet);
 				auto* consumer = GetConsumerByMediaSsrc(feedback->GetMediaSsrc());
 
 				if (consumer == nullptr)
@@ -545,7 +545,7 @@ namespace RTC
 				{
 					case RTC::RTCP::FeedbackRtp::MessageType::NACK:
 					{
-						auto* nackPacket = dynamic_cast<RTC::RTCP::FeedbackRtpNackPacket*>(packet);
+						auto* nackPacket = static_cast<RTC::RTCP::FeedbackRtpNackPacket*>(packet);
 
 						consumer->ReceiveNack(nackPacket);
 
@@ -569,7 +569,7 @@ namespace RTC
 
 			case RTC::RTCP::Type::SR:
 			{
-				auto* sr = dynamic_cast<RTC::RTCP::SenderReportPacket*>(packet);
+				auto* sr = static_cast<RTC::RTCP::SenderReportPacket*>(packet);
 				auto it  = sr->Begin();
 
 				// Even if Sender Report packet can only contains one report...
@@ -597,7 +597,7 @@ namespace RTC
 
 			case RTC::RTCP::Type::SDES:
 			{
-				auto* sdes = dynamic_cast<RTC::RTCP::SdesPacket*>(packet);
+				auto* sdes = static_cast<RTC::RTCP::SdesPacket*>(packet);
 				auto it    = sdes->Begin();
 
 				for (; it != sdes->End(); ++it)

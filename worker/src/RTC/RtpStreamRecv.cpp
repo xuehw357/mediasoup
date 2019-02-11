@@ -239,8 +239,7 @@ namespace RTC
 			this->pliCount++;
 
 			// Notify the listener.
-			dynamic_cast<RTC::RtpStreamRecv::Listener*>(this->listener)
-			  ->OnRtpStreamSendRtcpPacket(this, &packet);
+			static_cast<RTC::RtpStreamRecv::Listener*>(this->listener)->OnRtpStreamSendRtcpPacket(this, &packet);
 		}
 		else if (this->params.useFir)
 		{
@@ -259,8 +258,7 @@ namespace RTC
 			this->firCount++;
 
 			// Notify the listener.
-			dynamic_cast<RTC::RtpStreamRecv::Listener*>(this->listener)
-			  ->OnRtpStreamSendRtcpPacket(this, &packet);
+			static_cast<RTC::RtpStreamRecv::Listener*>(this->listener)->OnRtpStreamSendRtcpPacket(this, &packet);
 		}
 	}
 
@@ -370,7 +368,7 @@ namespace RTC
 		packet.Serialize(RTC::RTCP::Buffer);
 
 		// Notify the listener.
-		dynamic_cast<RTC::RtpStreamRecv::Listener*>(this->listener)->OnRtpStreamSendRtcpPacket(this, &packet);
+		static_cast<RTC::RtpStreamRecv::Listener*>(this->listener)->OnRtpStreamSendRtcpPacket(this, &packet);
 	}
 
 	inline void RtpStreamRecv::OnNackGeneratorKeyFrameRequired()

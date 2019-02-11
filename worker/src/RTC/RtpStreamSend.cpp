@@ -244,7 +244,7 @@ namespace RTC
 		PacketRepaired(packet);
 
 		// Send the packet.
-		dynamic_cast<RTC::RtpStreamSend::Listener*>(this->listener)
+		static_cast<RTC::RtpStreamSend::Listener*>(this->listener)
 		  ->OnRtpStreamRetransmitRtpPacket(this, rtxPacket);
 
 		// Delete the RTX RtpPacket if it was cloned.

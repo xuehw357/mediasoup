@@ -180,7 +180,7 @@ namespace RTC
 		bool VP8::PayloadDescriptorHandler::Encode(
 		  RTC::Codecs::EncodingContext* encodingContext, uint8_t* data)
 		{
-			auto* context = dynamic_cast<EncodingContext*>(encodingContext);
+			auto* context = static_cast<EncodingContext*>(encodingContext);
 
 			// Check whether pictureId and tl0PictureIndex sync is required.
 			if (context->syncRequired)
