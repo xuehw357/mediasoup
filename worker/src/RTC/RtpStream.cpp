@@ -19,8 +19,9 @@ namespace RTC
 
 	/* Instance methods. */
 
-	RtpStream::RtpStream(RTC::RtpStream::Listener* listener, RTC::RtpStream::Params& params)
-	  : listener(listener), params(params)
+	RtpStream::RtpStream(
+	  RTC::RtpStream::Listener* listener, RTC::RtpStream::Params& params, uint8_t initialScore)
+	  : listener(listener), params(params), score(initialScore)
 	{
 		MS_TRACE();
 	}
@@ -350,6 +351,26 @@ namespace RTC
 		{
 			MS_DEBUG_TAG(
 			  score, "[added score:%" PRIu8 ", computed score:%" PRIu8 "] (no change)", score, this->score);
+		}
+	}
+
+	void RtpStream::ResetScore()
+	{
+		MS_TRACE();
+
+		this->totalSourceLoss   = 0;
+		this->totalReportedLoss = 0;
+		this->totalSentPackets  = 0;
+
+		this->scores.clear();
+		this->mapRepairedPackets.clear();
+
+		if (this->score != 0)
+		{
+			this->score = 0;
+
+			// Notify the listener.
+			this->listener->OnRtpStreamScore(this, 0);
 		}
 	}
 

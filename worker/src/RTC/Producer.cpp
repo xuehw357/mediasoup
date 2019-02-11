@@ -14,7 +14,7 @@ namespace RTC
 
 	/* Instance methods. */
 
-	Producer::Producer(const std::string& id, Listener* listener, json& data)
+	Producer::Producer(const std::string& id, RTC::Producer::Listener* listener, json& data)
 	  : id(id), listener(listener)
 	{
 		MS_TRACE();
@@ -864,20 +864,6 @@ namespace RTC
 		Channel::Notifier::Emit(this->id, "score", data);
 	}
 
-	inline void Producer::OnRtpStreamSendRtcpPacket(RTC::RtpStream* /*rtpStream*/, RTC::RTCP::Packet* packet)
-	{
-		// Notify the listener.
-		this->listener->OnProducerSendRtcpPacket(this, packet);
-	}
-
-	inline void Producer::OnRtpStreamRetransmitRtpPacket(
-	  RTC::RtpStream* /*rtpStream*/, RTC::RtpPacket* /*packet*/)
-	{
-		MS_TRACE();
-
-		// Do nothing.
-	}
-
 	inline void Producer::OnRtpStreamScore(RTC::RtpStream* rtpStream, uint8_t score)
 	{
 		MS_TRACE();
@@ -887,6 +873,13 @@ namespace RTC
 
 		// Emit the score event.
 		EmitScore();
+	}
+
+	inline void Producer::OnRtpStreamSendRtcpPacket(
+	  RTC::RtpStreamRecv* /*rtpStream*/, RTC::RTCP::Packet* packet)
+	{
+		// Notify the listener.
+		this->listener->OnProducerSendRtcpPacket(this, packet);
 	}
 
 	inline void Producer::OnKeyFrameNeeded(

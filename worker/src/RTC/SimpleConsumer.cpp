@@ -11,7 +11,7 @@ namespace RTC
 {
 	/* Instance methods. */
 
-	SimpleConsumer::SimpleConsumer(const std::string& id, Listener* listener, json& data)
+	SimpleConsumer::SimpleConsumer(const std::string& id, RTC::Consumer::Listener* listener, json& data)
 	  : RTC::Consumer::Consumer(id, listener, data, RTC::RtpParameters::Type::SIMPLE)
 	{
 		MS_TRACE();
@@ -440,27 +440,19 @@ namespace RTC
 		Channel::Notifier::Emit(this->id, "score", data);
 	}
 
-	inline void SimpleConsumer::OnRtpStreamSendRtcpPacket(
-	  RTC::RtpStream* /*rtpStream*/, RTC::RTCP::Packet* /*packet*/)
-	{
-		MS_TRACE();
-
-		// Do nothing.
-	}
-
-	inline void SimpleConsumer::OnRtpStreamRetransmitRtpPacket(
-	  RTC::RtpStream* /*rtpStream*/, RTC::RtpPacket* packet)
-	{
-		MS_TRACE();
-
-		this->listener->OnConsumerSendRtpPacket(this, packet);
-	}
-
 	inline void SimpleConsumer::OnRtpStreamScore(RTC::RtpStream* /*rtpStream*/, uint8_t /*score*/)
 	{
 		MS_TRACE();
 
 		// Emit the score event.
 		EmitScore();
+	}
+
+	inline void SimpleConsumer::OnRtpStreamRetransmitRtpPacket(
+	  RTC::RtpStreamSend* /*rtpStream*/, RTC::RtpPacket* packet)
+	{
+		MS_TRACE();
+
+		this->listener->OnConsumerSendRtpPacket(this, packet);
 	}
 } // namespace RTC

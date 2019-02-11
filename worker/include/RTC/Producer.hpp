@@ -19,7 +19,7 @@
 
 namespace RTC
 {
-	class Producer : public RTC::RtpStream::Listener, public RTC::KeyFrameRequestManager::Listener
+	class Producer : public RTC::RtpStreamRecv::Listener, public RTC::KeyFrameRequestManager::Listener
 	{
 	public:
 		class Listener
@@ -52,7 +52,7 @@ namespace RTC
 		};
 
 	public:
-		Producer(const std::string& id, Listener* listener, json& data);
+		Producer(const std::string& id, RTC::Producer::Listener* listener, json& data);
 		virtual ~Producer();
 
 	public:
@@ -78,9 +78,8 @@ namespace RTC
 
 		/* Pure virtual methods inherited from RTC::RtpStreamRecv::Listener. */
 	public:
-		void OnRtpStreamSendRtcpPacket(RTC::RtpStream* rtpStream, RTC::RTCP::Packet* packet) override;
-		void OnRtpStreamRetransmitRtpPacket(RTC::RtpStream* rtpStream, RTC::RtpPacket* packet) override;
 		void OnRtpStreamScore(RTC::RtpStream* rtpStream, uint8_t score) override;
+		void OnRtpStreamSendRtcpPacket(RTC::RtpStreamRecv* rtpStream, RTC::RTCP::Packet* packet) override;
 
 		/* Pure virtual methods inherited from RTC::KeyFrameRequestManager::Listener. */
 	public:
@@ -92,7 +91,7 @@ namespace RTC
 
 	private:
 		// Passed by argument.
-		Listener* listener{ nullptr };
+		RTC::Producer::Listener* listener{ nullptr };
 		// Allocated by this.
 		std::map<uint32_t, RTC::RtpStreamRecv*> mapSsrcRtpStream;
 		RTC::KeyFrameRequestManager* keyFrameRequestManager{ nullptr };

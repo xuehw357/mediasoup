@@ -24,12 +24,10 @@ namespace RTC
 {
 	class RtpStream
 	{
-	public:
+	protected:
 		class Listener
 		{
 		public:
-			virtual void OnRtpStreamSendRtcpPacket(RTC::RtpStream* rtpStream, RTC::RTCP::Packet* packet) = 0;
-			virtual void OnRtpStreamRetransmitRtpPacket(RTC::RtpStream* rtpStream, RTC::RtpPacket* packet) = 0;
 			virtual void OnRtpStreamScore(RTC::RtpStream* rtpStream, uint8_t score) = 0;
 		};
 
@@ -52,7 +50,7 @@ namespace RTC
 		};
 
 	public:
-		RtpStream(Listener* listener, RTC::RtpStream::Params& params);
+		RtpStream(RTC::RtpStream::Listener* listener, RTC::RtpStream::Params& params, uint8_t initialScore);
 		virtual ~RtpStream();
 
 		void FillJson(json& jsonObject) const;
@@ -78,6 +76,7 @@ namespace RTC
 	protected:
 		bool UpdateSeq(RTC::RtpPacket* packet);
 		void UpdateScore(RTC::RTCP::ReceiverReport* report);
+		void ResetScore();
 		void PacketRepaired(RTC::RtpPacket* packet);
 
 	private:
@@ -85,7 +84,7 @@ namespace RTC
 
 	protected:
 		// Given as argument.
-		Listener* listener{ nullptr };
+		RTC::RtpStream::Listener* listener{ nullptr };
 		Params params;
 		// Others.
 		//   https://tools.ietf.org/html/rfc3550#appendix-A.1 stuff.
@@ -105,6 +104,8 @@ namespace RTC
 		size_t firCount{ 0 };
 		RTC::RtpDataCounter transmissionCounter;
 		RTC::RtpDataCounter retransmissionCounter;
+
+	private:
 		// Score related.
 		uint8_t score{ 0 };
 		std::vector<uint8_t> scores;
@@ -114,8 +115,6 @@ namespace RTC
 		int32_t totalSourceLoss{ 0 };
 		int32_t totalReportedLoss{ 0 };
 		size_t totalSentPackets{ 0 };
-
-	private:
 		// Whether at least a RTP packet has been received.
 		bool started{ false };
 	}; // namespace RTC

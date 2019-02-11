@@ -10,6 +10,14 @@ namespace RTC
 {
 	class RtpStreamSend : public RTC::RtpStream
 	{
+	public:
+		class Listener : public RTC::RtpStream::Listener
+		{
+		public:
+			virtual void OnRtpStreamRetransmitRtpPacket(
+			  RTC::RtpStreamSend* rtpStream, RTC::RtpPacket* packet) = 0;
+		};
+
 	private:
 		struct StorageItem
 		{
@@ -24,14 +32,9 @@ namespace RTC
 			RTC::RtpPacket* packet{ nullptr };
 		};
 
-#ifdef MS_TEST
-		// For test units.
 	public:
-		static std::vector<RTC::RtpPacket*>& GetRetransmissionContainer();
-#endif
-
-	public:
-		RtpStreamSend(RTC::RtpStream::Listener* listener, RTC::RtpStream::Params& params, size_t bufferSize);
+		RtpStreamSend(
+		  RTC::RtpStreamSend::Listener* listener, RTC::RtpStream::Params& params, size_t bufferSize);
 		~RtpStreamSend() override;
 
 		void FillJsonStats(json& jsonObject) override;
@@ -49,11 +52,6 @@ namespace RTC
 	private:
 		void StorePacket(RTC::RtpPacket* packet);
 		void ClearRetransmissionBuffer();
-
-#ifdef MS_TEST
-		// Make it public during test units.
-	public:
-#endif
 		void FillRetransmissionContainer(uint16_t seq, uint16_t bitmask);
 
 	private:

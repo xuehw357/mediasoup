@@ -12,10 +12,14 @@ static constexpr size_t MaxRequestedPackets{ 17 };
 
 SCENARIO("receive RTP packets and trigger NACK", "[rtp][rtpstream]")
 {
-	class RtpStreamRecvListener : public RtpStream::Listener
+	class RtpStreamRecvListener : public RtpStreamRecv::Listener
 	{
 	public:
-		void OnRtpStreamSendRtcpPacket(RTC::RtpStream* rtpStream, RTC::RTCP::Packet* packet) override
+		void OnRtpStreamScore(RTC::RtpStream* /*rtpStream*/, uint8_t /*score*/) override
+		{
+		}
+
+		void OnRtpStreamSendRtcpPacket(RTC::RtpStreamRecv* rtpStream, RTC::RTCP::Packet* packet) override
 		{
 			switch (packet->GetType())
 			{
@@ -96,14 +100,6 @@ SCENARIO("receive RTP packets and trigger NACK", "[rtp][rtpstream]")
 
 				default:;
 			}
-		}
-
-		void OnRtpStreamRetransmitRtpPacket(RTC::RtpStream* rtpStream, RTC::RtpPacket* packet) override
-		{
-		}
-
-		void OnRtpStreamScore(RTC::RtpStream* /*rtpStream*/, uint8_t /*score*/) override
-		{
 		}
 
 	public:

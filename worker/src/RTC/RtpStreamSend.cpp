@@ -19,25 +19,13 @@ namespace RTC
 	static constexpr uint32_t MaxRetransmissionDelay{ 2000 };
 	static constexpr uint32_t DefaultRtt{ 100 };
 
-	/* Static methods. */
-
-#ifdef MS_TEST
-	std::vector<RTC::RtpPacket*>& RtpStreamSend::GetRetransmissionContainer()
-	{
-		return RetransmissionContainer;
-	}
-#endif
-
 	/* Instance methods. */
 
 	RtpStreamSend::RtpStreamSend(
-	  RTC::RtpStream::Listener* listener, RTC::RtpStream::Params& params, size_t bufferSize)
-	  : RTC::RtpStream::RtpStream(listener, params), storage(bufferSize)
+	  RTC::RtpStreamSend::Listener* listener, RTC::RtpStream::Params& params, size_t bufferSize)
+	  : RTC::RtpStream::RtpStream(listener, params, 10), storage(bufferSize)
 	{
 		MS_TRACE();
-
-		// Begin with an score of 10.
-		this->score = 10;
 	}
 
 	RtpStreamSend::~RtpStreamSend()
@@ -256,7 +244,8 @@ namespace RTC
 		PacketRepaired(packet);
 
 		// Send the packet.
-		this->listener->OnRtpStreamRetransmitRtpPacket(this, rtxPacket);
+		dynamic_cast<RTC::RtpStreamSend::Listener*>(this->listener)
+		  ->OnRtpStreamRetransmitRtpPacket(this, rtxPacket);
 
 		// Delete the RTX RtpPacket if it was cloned.
 		if (rtxPacket != packet)

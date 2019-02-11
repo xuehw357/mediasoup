@@ -3,14 +3,15 @@
 
 #include "RTC/Codecs/PayloadDescriptorHandler.hpp"
 #include "RTC/Consumer.hpp"
+#include "RTC/RtpStreamSend.hpp"
 #include "RTC/SeqManager.hpp"
 
 namespace RTC
 {
-	class SimpleConsumer : public Consumer
+	class SimpleConsumer : public Consumer, public RTC::RtpStreamSend::Listener
 	{
 	public:
-		SimpleConsumer(const std::string& id, Listener* listener, json& data);
+		SimpleConsumer(const std::string& id, RTC::Consumer::Listener* listener, json& data);
 		~SimpleConsumer() override;
 
 	public:
@@ -38,11 +39,10 @@ namespace RTC
 		void RequestKeyFrame();
 		void EmitScore() const;
 
-		/* Pure virtual methods inherited from RtpStream::Listener. */
+		/* Pure virtual methods inherited from RtpStreamSend::Listener. */
 	public:
-		void OnRtpStreamSendRtcpPacket(RTC::RtpStream* rtpStream, RTC::RTCP::Packet* packet) override;
-		void OnRtpStreamRetransmitRtpPacket(RTC::RtpStream* rtpStream, RTC::RtpPacket* packet) override;
 		void OnRtpStreamScore(RTC::RtpStream* rtpStream, uint8_t score) override;
+		void OnRtpStreamRetransmitRtpPacket(RTC::RtpStreamSend* rtpStream, RTC::RtpPacket* packet) override;
 
 	private:
 		// Allocated by this.

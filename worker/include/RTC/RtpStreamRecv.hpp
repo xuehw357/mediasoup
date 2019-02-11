@@ -13,7 +13,15 @@ namespace RTC
 	                      public Timer::Listener
 	{
 	public:
-		RtpStreamRecv(RTC::RtpStream::Listener* listener, RTC::RtpStream::Params& params);
+		class Listener : public RTC::RtpStream::Listener
+		{
+		public:
+			virtual void OnRtpStreamSendRtcpPacket(
+			  RTC::RtpStreamRecv* rtpStream, RTC::RTCP::Packet* packet) = 0;
+		};
+
+	public:
+		RtpStreamRecv(RTC::RtpStreamRecv::Listener* listener, RTC::RtpStream::Params& params);
 		~RtpStreamRecv();
 
 		void FillJsonStats(json& jsonObject) override;

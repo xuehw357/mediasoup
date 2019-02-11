@@ -14,16 +14,13 @@ namespace RTC
 
 	/* Instance methods. */
 
-	RtpStreamRecv::RtpStreamRecv(RTC::RtpStream::Listener* listener, RTC::RtpStream::Params& params)
-	  : RTC::RtpStream::RtpStream(listener, params)
+	RtpStreamRecv::RtpStreamRecv(RTC::RtpStreamRecv::Listener* listener, RTC::RtpStream::Params& params)
+	  : RTC::RtpStream::RtpStream(listener, params, 10)
 	{
 		MS_TRACE();
 
 		if (this->params.useNack)
 			this->nackGenerator.reset(new RTC::NackGenerator(this));
-
-		// Begin with an score of 10.
-		this->score = 10;
 
 		// Set the incactivity check periodic timer.
 		this->inactivityCheckPeriodicTimer = new Timer(this);
@@ -242,7 +239,8 @@ namespace RTC
 			this->pliCount++;
 
 			// Notify the listener.
-			this->listener->OnRtpStreamSendRtcpPacket(this, &packet);
+			dynamic_cast<RTC::RtpStreamRecv::Listener*>(this->listener)
+			  ->OnRtpStreamSendRtcpPacket(this, &packet);
 		}
 		else if (this->params.useFir)
 		{
@@ -261,7 +259,8 @@ namespace RTC
 			this->firCount++;
 
 			// Notify the listener.
-			this->listener->OnRtpStreamSendRtcpPacket(this, &packet);
+			dynamic_cast<RTC::RtpStreamRecv::Listener*>(this->listener)
+			  ->OnRtpStreamSendRtcpPacket(this, &packet);
 		}
 	}
 
@@ -306,22 +305,9 @@ namespace RTC
 		{
 			auto now = DepLibUV::GetTime();
 
-			// If no RTP is being received notify score 0 to the listener.
+			// If no RTP is being received reset the score.
 			if (this->transmissionCounter.GetRate(now) == 0)
-			{
-				this->totalSourceLoss   = 0;
-				this->totalReportedLoss = 0;
-				this->totalSentPackets  = 0;
-
-				this->scores.clear();
-				this->mapRepairedPackets.clear();
-
-				if (this->score != 0)
-				{
-					this->score = 0;
-					this->listener->OnRtpStreamScore(this, 0);
-				}
-			}
+				ResetScore();
 		}
 	}
 
@@ -384,7 +370,7 @@ namespace RTC
 		packet.Serialize(RTC::RTCP::Buffer);
 
 		// Notify the listener.
-		this->listener->OnRtpStreamSendRtcpPacket(this, &packet);
+		dynamic_cast<RTC::RtpStreamRecv::Listener*>(this->listener)->OnRtpStreamSendRtcpPacket(this, &packet);
 	}
 
 	inline void RtpStreamRecv::OnNackGeneratorKeyFrameRequired()

@@ -11,14 +11,13 @@
 #include "RTC/RtpDictionaries.hpp"
 #include "RTC/RtpPacket.hpp"
 #include "RTC/RtpStream.hpp"
-#include "RTC/RtpStreamSend.hpp"
 #include <string>
 #include <unordered_set>
 #include <vector>
 
 namespace RTC
 {
-	class Consumer : public RTC::RtpStream::Listener
+	class Consumer
 	{
 	public:
 		class Listener
@@ -30,7 +29,11 @@ namespace RTC
 		};
 
 	public:
-		Consumer(const std::string& id, Listener* listener, json& data, RTC::RtpParameters::Type type);
+		Consumer(
+		  const std::string& id,
+		  RTC::Consumer::Listener* listener,
+		  json& data,
+		  RTC::RtpParameters::Type type);
 		virtual ~Consumer();
 
 	public:
@@ -61,17 +64,13 @@ namespace RTC
 		virtual void Paused(bool wasProducer = false)  = 0;
 		virtual void Resumed(bool wasProducer = false) = 0;
 
-		/* Pure virtual methods inherited from RtpStream::Listener. */
-	public:
-		virtual void OnRtpStreamScore(RTC::RtpStream* rtpStream, uint8_t score) = 0;
-
 	public:
 		// Passed by argument.
 		const std::string id;
 
 	protected:
 		// Passed by argument.
-		Listener* listener{ nullptr };
+		RTC::Consumer::Listener* listener{ nullptr };
 		RTC::Media::Kind kind;
 		RTC::RtpParameters rtpParameters;
 		RTC::RtpParameters::Type type{ RTC::RtpParameters::Type::NONE };

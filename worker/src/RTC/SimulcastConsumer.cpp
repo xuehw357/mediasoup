@@ -17,7 +17,8 @@ namespace RTC
 
 	/* Instance methods. */
 
-	SimulcastConsumer::SimulcastConsumer(const std::string& id, Listener* listener, json& data)
+	SimulcastConsumer::SimulcastConsumer(
+	  const std::string& id, RTC::Consumer::Listener* listener, json& data)
 	  : RTC::Consumer::Consumer(id, listener, data, RTC::RtpParameters::Type::SIMULCAST),
 	    packetsBeforeProbation(PacketsBeforeProbation)
 	{
@@ -686,27 +687,19 @@ namespace RTC
 			RecalculateTargetSpatialLayer();
 	}
 
-	inline void SimulcastConsumer::OnRtpStreamSendRtcpPacket(
-	  RTC::RtpStream* /*rtpStream*/, RTC::RTCP::Packet* /*packet*/)
-	{
-		MS_TRACE();
-
-		// Do nothing.
-	}
-
-	inline void SimulcastConsumer::OnRtpStreamRetransmitRtpPacket(
-	  RTC::RtpStream* /*rtpStream*/, RTC::RtpPacket* packet)
-	{
-		MS_TRACE();
-
-		this->listener->OnConsumerSendRtpPacket(this, packet);
-	}
-
 	inline void SimulcastConsumer::OnRtpStreamScore(RTC::RtpStream* /*rtpStream*/, uint8_t /*score*/)
 	{
 		MS_TRACE();
 
 		// Emit the score event.
 		EmitScore();
+	}
+
+	inline void SimulcastConsumer::OnRtpStreamRetransmitRtpPacket(
+	  RTC::RtpStreamSend* /*rtpStream*/, RTC::RtpPacket* packet)
+	{
+		MS_TRACE();
+
+		this->listener->OnConsumerSendRtpPacket(this, packet);
 	}
 } // namespace RTC
