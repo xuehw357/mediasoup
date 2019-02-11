@@ -7,6 +7,9 @@
 
 using namespace RTC;
 
+// 17: 16 bit mask + the initial sequence number.
+static constexpr size_t MaxRequestedPackets{ 17 };
+
 SCENARIO("receive RTP packets and trigger NACK", "[rtp][rtpstream]")
 {
 	class RtpStreamRecvListener : public RtpStream::Listener
@@ -27,7 +30,7 @@ SCENARIO("receive RTP packets and trigger NACK", "[rtp][rtpstream]")
 							REQUIRE(this->shouldTriggerPLI == true);
 
 							this->shouldTriggerPLI = false;
-							this->numNackedPackets = 0;
+							this->nackedSeqNumbers.clear();
 
 							break;
 						}
@@ -39,7 +42,7 @@ SCENARIO("receive RTP packets and trigger NACK", "[rtp][rtpstream]")
 							REQUIRE(this->shouldTriggerFIR == true);
 
 							this->shouldTriggerFIR = false;
-							this->numNackedPackets = 0;
+							this->nackedSeqNumbers.clear();
 
 							break;
 						}
@@ -68,7 +71,18 @@ SCENARIO("receive RTP packets and trigger NACK", "[rtp][rtpstream]")
 							{
 								RTC::RTCP::FeedbackRtpNackItem* item = *it;
 
-								this->numNackedPackets += item->CountRequestedPackets();
+								uint16_t firstSeq = item->GetPacketId();
+								uint16_t bitmask  = item->GetLostPacketBitmask();
+
+								this->nackedSeqNumbers.push_back(firstSeq);
+
+								for (size_t i = 1; i < MaxRequestedPackets; ++i)
+								{
+									if ((bitmask & 1) != 0)
+										this->nackedSeqNumbers.push_back(firstSeq + i);
+
+									bitmask >>= 1;
+								}
 							}
 
 							break;
@@ -93,10 +107,10 @@ SCENARIO("receive RTP packets and trigger NACK", "[rtp][rtpstream]")
 		}
 
 	public:
-		bool shouldTriggerNack  = false;
-		bool shouldTriggerPLI   = false;
-		bool shouldTriggerFIR   = false;
-		size_t numNackedPackets = 0;
+		bool shouldTriggerNack = false;
+		bool shouldTriggerPLI  = false;
+		bool shouldTriggerFIR  = false;
+		std::vector<uint16_t> nackedSeqNumbers;
 	};
 
 	// clang-format off
@@ -135,18 +149,19 @@ SCENARIO("receive RTP packets and trigger NACK", "[rtp][rtpstream]")
 		listener.shouldTriggerFIR  = false;
 		rtpStream.ReceivePacket(packet);
 
-		REQUIRE(listener.numNackedPackets == 1);
-		listener.numNackedPackets = 0;
+		REQUIRE(listener.nackedSeqNumbers.size() == 1);
+		REQUIRE(listener.nackedSeqNumbers[0] == 2);
+		listener.nackedSeqNumbers.clear();
 
 		packet->SetSequenceNumber(2);
 		rtpStream.ReceivePacket(packet);
 
-		REQUIRE(listener.numNackedPackets == 0);
+		REQUIRE(listener.nackedSeqNumbers.size() == 0);
 
 		packet->SetSequenceNumber(4);
 		rtpStream.ReceivePacket(packet);
 
-		REQUIRE(listener.numNackedPackets == 0);
+		REQUIRE(listener.nackedSeqNumbers.size() == 0);
 	}
 
 	SECTION("wrapping sequence numbers")
@@ -163,8 +178,10 @@ SCENARIO("receive RTP packets and trigger NACK", "[rtp][rtpstream]")
 		listener.shouldTriggerFIR  = false;
 		rtpStream.ReceivePacket(packet);
 
-		REQUIRE(listener.numNackedPackets == 2);
-		listener.numNackedPackets = 0;
+		REQUIRE(listener.nackedSeqNumbers.size() == 2);
+		REQUIRE(listener.nackedSeqNumbers[0] == 0xffff);
+		REQUIRE(listener.nackedSeqNumbers[1] == 0);
+		listener.nackedSeqNumbers.clear();
 	}
 
 	SECTION("require key frame")
