@@ -277,7 +277,7 @@ namespace RTC
 
 		if (!this->params.useInBandFec)
 		{
-			MS_DEBUG_TAG(rtcp, "in band FEC not supported");
+			MS_WARN_TAG(rtcp, "in band FEC not supported");
 
 			return;
 		}
