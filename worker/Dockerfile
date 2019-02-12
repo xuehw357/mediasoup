@@ -9,7 +9,7 @@ RUN \
 	   libtool apache2 python-dev pkg-config zlib1g-dev libgcrypt11-dev \
 	   libgss-dev libssl-dev libxml2-dev ragel nasm libarchive-dev make bear \
 	   automake libdbus-1-dev libboost-dev autoconf-archive bash-completion \
-	   python-yaml
+	   python-yaml jq
 
 # Install node 10.
 RUN curl -sL https://deb.nodesource.com/setup_10.x | bash -

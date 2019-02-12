@@ -39,7 +39,9 @@ format:
 
 bear:
 	$(MAKE) clean
-	bear -o compile_commands_template.json $(MAKE)
+	bear -o compile_commands_template.tmp.json $(MAKE)
+	jq 'del(.[] | select(.file == "$(PWD)/src/Utils/IP.cpp"))' compile_commands_template.tmp.json > compile_commands_template.json
+	rm compile_commands_template.tmp.json
 	sed -i "s|$(PWD)|PATH|g" compile_commands_template.json
 
 tidy:
