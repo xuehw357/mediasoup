@@ -168,6 +168,8 @@ namespace RTC
 
 		report->SetSsrc(GetSsrc());
 
+		uint32_t prevPacketsLost = this->packetsLost;
+
 		// Calculate Packets Expected and Lost.
 		uint32_t expected = (this->cycles + this->maxSeq) - this->baseSeq + 1;
 		this->packetsLost = expected - this->transmissionCounter.GetPacketCount();
@@ -191,7 +193,9 @@ namespace RTC
 		// Worst remote fraction lost is not worse than local one.
 		if (worstRemoteFractionLost <= this->fractionLost)
 		{
-			report->SetTotalLost(this->packetsLost);
+			this->reportedPacketLost += (this->packetsLost - prevPacketsLost);
+
+			report->SetTotalLost(this->reportedPacketLost);
 			report->SetFractionLost(this->fractionLost);
 		}
 		else
@@ -199,7 +203,7 @@ namespace RTC
 			// Recalculate packetsLost.
 			uint32_t newLostInterval     = (worstRemoteFractionLost * expectedInterval) >> 8;
 			uint32_t newReceivedInterval = expectedInterval - newLostInterval;
-			uint32_t newPacketsLost      = this->packetsLost - (receivedInterval - newReceivedInterval);
+			this->reportedPacketLost     += (receivedInterval - newReceivedInterval);
 
 			// TMP.
 			MS_DEBUG_TAG(
@@ -208,13 +212,11 @@ namespace RTC
 			  "/%" PRIu8 "]. Worst remote packetsLost/fractionLost:[%" PRIu32 "/%" PRIu8 "]",
 			  this->packetsLost,
 			  this->fractionLost,
-			  newPacketsLost,
+			  this->reportedPacketLost,
 			  worstRemoteFractionLost);
 
-			report->SetTotalLost(newPacketsLost);
+			report->SetTotalLost(this->reportedPacketLost);
 			report->SetFractionLost(worstRemoteFractionLost);
-
-			this->packetsLost = newPacketsLost;
 		}
 
 		// Fill the rest of the report.
