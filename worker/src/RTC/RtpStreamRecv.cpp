@@ -207,6 +207,7 @@ namespace RTC
 			// Recalculate packetsLost.
 			uint32_t newLostInterval     = (worstRemoteFractionLost * expectedInterval) >> 8;
 			uint32_t newReceivedInterval = expectedInterval - newLostInterval;
+
 			this->reportedPacketLost += (receivedInterval - newReceivedInterval);
 
 			// TODO: TMP.
