@@ -199,7 +199,7 @@ namespace RTC
 			// Recalculate packetsLost.
 			uint32_t newLostInterval     = (worstRemoteFractionLost * expectedInterval) >> 8;
 			uint32_t newReceivedInterval = expectedInterval - newLostInterval;
-			uint32_t newPacketLost       = this->packetsLost - (receivedInterval - newReceivedInterval);
+			uint32_t newPacketsLost      = this->packetsLost - (receivedInterval - newReceivedInterval);
 
 			// TMP.
 			MS_DEBUG_TAG(
@@ -208,11 +208,13 @@ namespace RTC
 			  "/%" PRIu8 "]. Worst remote packetsLost/fractionLost:[%" PRIu32 "/%" PRIu8 "]",
 			  this->packetsLost,
 			  this->fractionLost,
-			  newPacketLost,
+			  newPacketsLost,
 			  worstRemoteFractionLost);
 
-			report->SetTotalLost(newPacketLost);
+			report->SetTotalLost(newPacketsLost);
 			report->SetFractionLost(worstRemoteFractionLost);
+
+			this->packetsLost = newPacketsLost;
 		}
 
 		// Fill the rest of the report.
