@@ -137,7 +137,7 @@ void IgnoreSignals()
 	MS_TRACE();
 
 	int err;
-	struct sigaction act;
+	struct sigaction act; // NOLINT(cppcoreguidelines-pro-type-member-init)
 
 	// clang-format off
 	std::map<std::string, int> ignoredSignals =

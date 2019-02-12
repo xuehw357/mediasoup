@@ -284,11 +284,9 @@ namespace RTC
 				this->varMaxBitrateKbps = 2.5f;
 		}
 
-		void AimdRateControl::ChangeState(const RateControlInput& input, int64_t nowMs)
+		void AimdRateControl::ChangeState(const RateControlInput& /*input*/, int64_t nowMs)
 		{
 			MS_TRACE();
-
-			(void)input;
 
 			switch (this->currentInput.bwState)
 			{

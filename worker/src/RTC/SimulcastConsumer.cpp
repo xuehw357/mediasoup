@@ -140,7 +140,7 @@ namespace RTC
 		EmitScore();
 	}
 
-	void SimulcastConsumer::ProducerRtpStreamScore(RTC::RtpStream* rtpStream, uint8_t score)
+	void SimulcastConsumer::ProducerRtpStreamScore(RTC::RtpStream* /*rtpStream*/, uint8_t /*score*/)
 	{
 		MS_TRACE();
 
@@ -509,7 +509,7 @@ namespace RTC
 		Channel::Notifier::Emit(this->id, "score", data);
 	}
 
-	void SimulcastConsumer::RecalculateTargetSpatialLayer(bool force)
+	void SimulcastConsumer::RecalculateTargetSpatialLayer(bool /*force*/)
 	{
 		MS_TRACE();
 

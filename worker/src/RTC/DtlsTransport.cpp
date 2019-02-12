@@ -1187,7 +1187,7 @@ namespace RTC
 
 		BUF_MEM* mem;
 
-		BIO_get_mem_ptr(bio, &mem); // NOLINT
+		BIO_get_mem_ptr(bio, &mem); // NOLINT[cppcoreguidelines-pro-type-cstyle-cast]
 
 		if ((mem == nullptr) || (mem->data == nullptr) || (mem->length == 0u))
 		{

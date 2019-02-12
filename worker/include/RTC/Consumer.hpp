@@ -62,8 +62,8 @@ namespace RTC
 		virtual json GetScore() const                                                       = 0;
 
 	protected:
-		virtual void Paused(bool wasProducer = false)  = 0;
-		virtual void Resumed(bool wasProducer = false) = 0;
+		virtual void Paused(bool wasProducer)  = 0;
+		virtual void Resumed(bool wasProducer) = 0;
 
 	public:
 		// Passed by argument.

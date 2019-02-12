@@ -58,6 +58,7 @@ inline static void onClose(uv_handle_t* handle)
 
 /* Instance methods. */
 
+// NOLINTNEXTLINE(cppcoreguidelines-pro-type-member-init)
 UdpSocket::UdpSocket(uv_udp_t* uvHandle) : uvHandle(uvHandle)
 {
 	MS_TRACE();
@@ -208,7 +209,7 @@ void UdpSocket::Send(const uint8_t* data, size_t len, const std::string& ip, uin
 	if (len == 0)
 		return;
 
-	struct sockaddr_storage addr;
+	struct sockaddr_storage addr; // NOLINT(cppcoreguidelines-pro-type-member-init)
 
 	switch (Utils::IP::GetFamily(ip))
 	{
@@ -265,10 +266,7 @@ bool UdpSocket::SetLocalAddress()
 	int family;
 
 	Utils::IP::GetAddressInfo(
-	  reinterpret_cast<const struct sockaddr*>(&this->localAddr),
-	  &family,
-	  this->localIp,
-	  &this->localPort);
+	  reinterpret_cast<const struct sockaddr*>(&this->localAddr), family, this->localIp, this->localPort);
 
 	return true;
 }

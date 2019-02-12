@@ -380,7 +380,7 @@ namespace RTC
 			uint16_t port;
 			std::string ip;
 
-			Utils::IP::GetAddressInfo(this->xorMappedAddress, &family, ip, &port);
+			Utils::IP::GetAddressInfo(this->xorMappedAddress, family, ip, port);
 
 			MS_DEBUG_DEV("  xorMappedAddress: %s : %" PRIu16, ip.c_str(), port);
 		}

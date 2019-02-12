@@ -32,8 +32,8 @@ namespace RTC
 		json GetScore() const override;
 
 	protected:
-		void Paused(bool wasProducer = false) override;
-		void Resumed(bool wasProducer = false) override;
+		void Paused(bool wasProducer) override;
+		void Resumed(bool wasProducer) override;
 
 	private:
 		void CreateRtpStream();

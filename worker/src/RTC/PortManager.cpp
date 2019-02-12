@@ -39,7 +39,7 @@ namespace RTC
 
 		int err;
 		int family = Utils::IP::GetFamily(ip);
-		struct sockaddr_storage bindAddr;
+		struct sockaddr_storage bindAddr; // NOLINT(cppcoreguidelines-pro-type-member-init)
 		size_t initialPortIdx;
 		size_t portIdx;
 		size_t attempt{ 0 };
@@ -325,8 +325,8 @@ namespace RTC
 					return it->second;
 
 				// Otherwise add an entry in the map and return it.
-				auto numPorts = static_cast<size_t>(
-				  Settings::configuration.rtcMaxPort - Settings::configuration.rtcMinPort + 1);
+				uint16_t numPorts =
+				  Settings::configuration.rtcMaxPort - Settings::configuration.rtcMinPort + 1;
 
 				// Emplace a new vector filled with numPorts false values, meaning that
 				// all ports are available.
@@ -346,8 +346,8 @@ namespace RTC
 					return it->second;
 
 				// Otherwise add an entry in the map and return it.
-				auto numPorts = static_cast<size_t>(
-				  Settings::configuration.rtcMaxPort - Settings::configuration.rtcMinPort + 1);
+				uint16_t numPorts =
+				  Settings::configuration.rtcMaxPort - Settings::configuration.rtcMinPort + 1;
 
 				// Emplace a new vector filled with numPorts false values, meaning that
 				// all ports are available.

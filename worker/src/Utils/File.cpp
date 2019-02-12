@@ -14,11 +14,12 @@ namespace Utils
 	{
 		MS_TRACE();
 
-		struct stat fileStat;
+		struct stat fileStat; // NOLINT(cppcoreguidelines-pro-type-member-init)
 		int err;
 
 		// Ensure the given file exists.
 		err = stat(file, &fileStat);
+
 		if (err != 0)
 			MS_THROW_ERROR("cannot read file '%s': %s", file, std::strerror(errno));
 
@@ -28,6 +29,7 @@ namespace Utils
 
 		// Ensure it is readable.
 		err = access(file, R_OK);
+
 		if (err != 0)
 			MS_THROW_ERROR("cannot read file '%s': %s", file, std::strerror(errno));
 	}

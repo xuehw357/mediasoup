@@ -34,7 +34,7 @@ namespace RTC
 		static constexpr double TimestampToMs{ 1000.0 / static_cast<double>(1 << InterArrivalShift) };
 
 		template<typename K, typename V>
-		std::vector<K> keys(const std::map<K, V>& map)
+		std::vector<K> Keys(const std::map<K, V>& map)
 		{
 			std::vector<K> keys;
 
@@ -368,7 +368,7 @@ namespace RTC
 					this->remoteRate.Update(&input, nowMs);
 					targetBitrateBps = this->remoteRate.UpdateBandwidthEstimate(nowMs);
 					updateEstimate   = this->remoteRate.ValidEstimate();
-					ssrcs            = keys(this->ssrcs);
+					ssrcs            = Keys(this->ssrcs);
 				}
 			}
 
@@ -413,7 +413,7 @@ namespace RTC
 			if (!this->remoteRate.ValidEstimate())
 				return false;
 
-			*ssrcs = keys(this->ssrcs);
+			*ssrcs = Keys(this->ssrcs);
 
 			if (this->ssrcs.empty())
 				*bitrateBps = 0;

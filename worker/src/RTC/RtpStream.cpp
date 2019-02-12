@@ -208,7 +208,7 @@ namespace RTC
 
 		// Calculate source packet loss since last RR.
 		auto previousTotalSourceLoss = this->totalSourceLoss;
-		size_t expectedPackets       = this->cycles + this->maxSeq - this->baseSeq + 1;
+		auto expectedPackets         = uint64_t{ this->cycles + this->maxSeq - this->baseSeq + 1 };
 
 		this->totalSourceLoss =
 		  static_cast<int32_t>(expectedPackets - this->transmissionCounter.GetPacketCount());

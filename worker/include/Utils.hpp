@@ -13,7 +13,7 @@ namespace Utils
 	public:
 		static int GetFamily(const char* ip, size_t ipLen);
 		static int GetFamily(const std::string& ip);
-		static void GetAddressInfo(const struct sockaddr* addr, int* family, std::string& ip, uint16_t* port);
+		static void GetAddressInfo(const struct sockaddr* addr, int& family, std::string& ip, uint16_t& port);
 		static bool CompareAddresses(const struct sockaddr* addr1, const struct sockaddr* addr2);
 		static struct sockaddr_storage CopyAddress(const struct sockaddr* addr);
 		static void NormalizeIp(std::string& ip);
@@ -35,15 +35,23 @@ namespace Utils
 		}
 
 		// Compare port.
-		if (((struct sockaddr_in*)addr1)->sin_port != ((struct sockaddr_in*)addr2)->sin_port)
+		if (
+		  reinterpret_cast<const struct sockaddr_in*>(addr1)->sin_port !=
+		  reinterpret_cast<const struct sockaddr_in*>(addr2)->sin_port)
+		{
 			return false;
+		}
 
 		// Compare IP.
 		switch (addr1->sa_family)
 		{
 			case AF_INET:
 			{
-				if (std::memcmp(&((struct sockaddr_in*)addr1)->sin_addr, &((struct sockaddr_in*)addr2)->sin_addr, 4) == 0)
+				if (
+				  std::memcmp(
+				    std::addressof(reinterpret_cast<const struct sockaddr_in*>(addr1)->sin_addr),
+				    std::addressof(reinterpret_cast<const struct sockaddr_in*>(addr2)->sin_addr),
+				    4) == 0)
 				{
 					return true;
 				}
@@ -53,7 +61,11 @@ namespace Utils
 
 			case AF_INET6:
 			{
-				if (std::memcmp(&((struct sockaddr_in6*)addr1)->sin6_addr, &((struct sockaddr_in6*)addr2)->sin6_addr, 16) == 0)
+				if (
+				  std::memcmp(
+				    std::addressof(reinterpret_cast<const struct sockaddr_in6*>(addr1)->sin6_addr),
+				    std::addressof(reinterpret_cast<const struct sockaddr_in6*>(addr2)->sin6_addr),
+				    16) == 0)
 				{
 					return true;
 				}
@@ -77,10 +89,11 @@ namespace Utils
 		switch (addr->sa_family)
 		{
 			case AF_INET:
-				std::memcpy(&copiedAddr, addr, sizeof(struct sockaddr_in));
+				std::memcpy(std::addressof(copiedAddr), addr, sizeof(struct sockaddr_in));
 				break;
+
 			case AF_INET6:
-				std::memcpy(&copiedAddr, addr, sizeof(struct sockaddr_in6));
+				std::memcpy(std::addressof(copiedAddr), addr, sizeof(struct sockaddr_in6));
 				break;
 		}
 
@@ -253,7 +266,9 @@ namespace Utils
 			len = 64;
 
 		for (size_t i{ 0 }; i < len; ++i)
+		{
 			buffer[i] = chars[GetRandomUInt(0, sizeof(chars) - 1)];
+		}
 
 		return std::string(buffer, len);
 	}
@@ -264,7 +279,9 @@ namespace Utils
 		const uint8_t* p = data;
 
 		while (size--)
+		{
 			crc = Crypto::crc32Table[(crc ^ *p++) & 0xFF] ^ (crc >> 8);
+		}
 
 		return crc ^ ~0U;
 	}

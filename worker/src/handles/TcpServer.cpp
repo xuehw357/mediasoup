@@ -25,6 +25,7 @@ inline static void onClose(uv_handle_t* handle)
 
 /* Instance methods. */
 
+// NOLINTNEXTLINE(cppcoreguidelines-pro-type-member-init)
 TcpServer::TcpServer(uv_tcp_t* uvHandle, int backlog) : uvHandle(uvHandle)
 {
 	MS_TRACE();
@@ -119,10 +120,7 @@ bool TcpServer::SetLocalAddress()
 	int family;
 
 	Utils::IP::GetAddressInfo(
-	  reinterpret_cast<const struct sockaddr*>(&this->localAddr),
-	  &family,
-	  this->localIp,
-	  &this->localPort);
+	  reinterpret_cast<const struct sockaddr*>(&this->localAddr), family, this->localIp, this->localPort);
 
 	return true;
 }

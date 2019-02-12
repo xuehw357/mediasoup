@@ -181,7 +181,7 @@ namespace RTC
 				MS_DEBUG_DEV("Consumer paused [consumerId:%s]", this->id.c_str());
 
 				if (wasActive)
-					Paused();
+					Paused(false);
 
 				request->Accept();
 
@@ -202,7 +202,7 @@ namespace RTC
 				MS_DEBUG_DEV("Consumer resumed [consumerId:%s]", this->id.c_str());
 
 				if (IsActive())
-					Resumed();
+					Resumed(false);
 
 				request->Accept();
 

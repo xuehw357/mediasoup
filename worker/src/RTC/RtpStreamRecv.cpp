@@ -162,6 +162,9 @@ namespace RTC
 		{
 			// Notify the listener so we'll get the worst remote fraction lost.
 			static_cast<RTC::RtpStreamRecv::Listener*>(this->listener)->OnRtpStreamNeedWorstRemoteFractionLost(this, worstRemoteFractionLost);
+
+			if (worstRemoteFractionLost > 0)
+				MS_DEBUG_TAG(rtcp, "using worst remote fraction lost:%" PRIu8, worstRemoteFractionLost);
 		}
 
 		auto report = new RTC::RTCP::ReceiverReport();

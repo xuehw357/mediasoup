@@ -13,7 +13,6 @@ namespace RTC
 		{
 			MS_TRACE();
 
-			(void)data;
 			std::unique_ptr<PayloadDescriptor> payloadDescriptor(new PayloadDescriptor());
 
 			if (len < 2)

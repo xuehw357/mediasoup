@@ -26,11 +26,10 @@ namespace RTC
 		constexpr uint16_t DeltaCounterMax{ 1000 };
 
 		void OveruseEstimator::Update(
-		  int64_t tDelta, double tsDelta, int sizeDelta, BandwidthUsage currentHypothesis, int64_t nowMs)
+		  int64_t tDelta, double tsDelta, int sizeDelta, BandwidthUsage currentHypothesis, int64_t /*nowMs*/)
 		{
 			MS_TRACE();
 
-			(void)nowMs;
 			const double minFramePeriod = UpdateMinFramePeriod(tsDelta);
 			const double tTsDelta       = tDelta - tsDelta;
 			double fsDelta              = sizeDelta;

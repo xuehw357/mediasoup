@@ -70,7 +70,7 @@ namespace Utils
 			return AF_UNSPEC;
 	}
 
-	void IP::GetAddressInfo(const struct sockaddr* addr, int* family, std::string& ip, uint16_t* port)
+	void IP::GetAddressInfo(const struct sockaddr* addr, int& family, std::string& ip, uint16_t& port)
 	{
 		MS_TRACE();
 
@@ -82,12 +82,12 @@ namespace Utils
 			case AF_INET:
 			{
 				err = uv_inet_ntop(
-					AF_INET, &((struct sockaddr_in*)addr)->sin_addr, ipBuffer, INET_ADDRSTRLEN);
+					AF_INET, std::addressof(reinterpret_cast<const struct sockaddr_in*>(addr)->sin_addr), ipBuffer, INET_ADDRSTRLEN);
 
 				if (err)
 					MS_ABORT("uv_inet_ntop() failed: %s", uv_strerror(err));
 
-				*port = static_cast<uint16_t>(ntohs(((struct sockaddr_in*)addr)->sin_port));
+				port = static_cast<uint16_t>(ntohs(reinterpret_cast<const struct sockaddr_in*>(addr)->sin_port));
 
 				break;
 			}
@@ -95,23 +95,23 @@ namespace Utils
 			case AF_INET6:
 			{
 				err = uv_inet_ntop(
-					AF_INET6, &((struct sockaddr_in6*)addr)->sin6_addr, ipBuffer, INET6_ADDRSTRLEN);
+					AF_INET, std::addressof(reinterpret_cast<const struct sockaddr_in6*>(addr)->sin6_addr), ipBuffer, INET_ADDRSTRLEN);
 
 				if (err)
 					MS_ABORT("uv_inet_ntop() failed: %s", uv_strerror(err));
 
-				*port = static_cast<uint16_t>(ntohs(((struct sockaddr_in6*)addr)->sin6_port));
+				port = static_cast<uint16_t>(ntohs(reinterpret_cast<const struct sockaddr_in6*>(addr)->sin6_port));
 
 				break;
 			}
 
 			default:
 			{
-				MS_ABORT("unknown network family: %d", (int)addr->sa_family);
+				MS_ABORT("unknown network family: %d", static_cast<int>(addr->sa_family));
 			}
 		}
 
-		*family = addr->sa_family;
+		family = addr->sa_family;
 		ip.assign(ipBuffer);
 	}
 
@@ -136,7 +136,7 @@ namespace Utils
 					MS_ABORT("uv_ip4_addr() failed: %s", uv_strerror(err));
 
 				err = uv_ip4_name(
-					(const struct sockaddr_in*)&addrStorage,
+					reinterpret_cast<const struct sockaddr_in*>(std::addressof(addrStorage)),
 					ipBuffer,
 					INET6_ADDRSTRLEN+1);
 
@@ -159,7 +159,7 @@ namespace Utils
 					MS_ABORT("uv_ip6_addr() failed: %s", uv_strerror(err));
 
 				err = uv_ip6_name(
-					(const struct sockaddr_in6*)&addrStorage,
+					reinterpret_cast<const struct sockaddr_in6*>(std::addressof(addrStorage)),
 					ipBuffer,
 					INET6_ADDRSTRLEN+1);
 

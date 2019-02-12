@@ -65,6 +65,7 @@ inline static void onShutdown(uv_shutdown_t* req, int /*status*/)
 
 /* Instance methods. */
 
+// NOLINTNEXTLINE(cppcoreguidelines-pro-type-member-init)
 TcpConnection::TcpConnection(size_t bufferSize) : bufferSize(bufferSize)
 {
 	MS_TRACE();
@@ -345,7 +346,7 @@ bool TcpConnection::SetPeerAddress()
 	int family;
 
 	Utils::IP::GetAddressInfo(
-	  reinterpret_cast<const struct sockaddr*>(&this->peerAddr), &family, this->peerIp, &this->peerPort);
+	  reinterpret_cast<const struct sockaddr*>(&this->peerAddr), family, this->peerIp, this->peerPort);
 
 	return true;
 }

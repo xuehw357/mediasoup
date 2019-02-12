@@ -14,11 +14,11 @@ namespace RTC
 	{
 		MS_TRACE();
 
-		int ipFamily;
+		int family;
 		std::string ip;
 		uint16_t port;
 
-		Utils::IP::GetAddressInfo(GetLocalAddress(), &ipFamily, ip, &port);
+		Utils::IP::GetAddressInfo(GetLocalAddress(), family, ip, port);
 
 		// Add localIp.
 		if (this->localAnnouncedIp.empty())
@@ -29,7 +29,7 @@ namespace RTC
 		// Add localPort.
 		jsonObject["localPort"] = port;
 
-		Utils::IP::GetAddressInfo(GetRemoteAddress(), &ipFamily, ip, &port);
+		Utils::IP::GetAddressInfo(GetRemoteAddress(), family, ip, port);
 
 		// Add remoteIp.
 		jsonObject["remoteIp"] = ip;

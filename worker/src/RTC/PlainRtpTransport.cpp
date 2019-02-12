@@ -11,6 +11,7 @@ namespace RTC
 {
 	/* Instance methods. */
 
+	// NOLINTNEXTLINE(cppcoreguidelines-pro-type-member-init)
 	PlainRtpTransport::PlainRtpTransport(
 	  const std::string& id, RTC::Transport::Listener* listener, json& data)
 	  : RTC::Transport::Transport(id, listener)

@@ -58,7 +58,7 @@ namespace RTC
 	{
 		MS_TRACE();
 
-		srtp_policy_t policy;
+		srtp_policy_t policy; // NOLINT(cppcoreguidelines-pro-type-member-init)
 
 		// Set all policy fields to 0.
 		std::memset(&policy, 0, sizeof(srtp_policy_t));
