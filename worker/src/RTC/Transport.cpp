@@ -430,7 +430,7 @@ namespace RTC
 
 					if (consumer == nullptr)
 					{
-						MS_WARN_TAG(
+						MS_DEBUG_TAG(
 						  rtcp,
 						  "no Consumer found for received Receiver Report [ssrc:%" PRIu32 "]",
 						  report->GetSsrc());
@@ -457,7 +457,7 @@ namespace RTC
 
 						if (consumer == nullptr)
 						{
-							MS_WARN_TAG(
+							MS_DEBUG_TAG(
 							  rtcp,
 							  "no Consumer found for received %s Feedback packet "
 							  "[sender ssrc:%" PRIu32 ", media ssrc:%" PRIu32 "]",
@@ -497,7 +497,7 @@ namespace RTC
 						}
 						else
 						{
-							MS_WARN_TAG(
+							MS_DEBUG_TAG(
 							  rtcp,
 							  "ignoring unsupported %s Feedback PS AFB packet "
 							  "[sender ssrc:%" PRIu32 ", media ssrc:%" PRIu32 "]",
@@ -511,7 +511,7 @@ namespace RTC
 
 					default:
 					{
-						MS_WARN_TAG(
+						MS_DEBUG_TAG(
 						  rtcp,
 						  "ignoring unsupported %s Feedback packet "
 						  "[sender ssrc:%" PRIu32 ", media ssrc:%" PRIu32 "]",
@@ -531,7 +531,7 @@ namespace RTC
 
 				if (consumer == nullptr)
 				{
-					MS_WARN_TAG(
+					MS_DEBUG_TAG(
 					  rtcp,
 					  "no Consumer found for received Feedback packet "
 					  "[sender ssrc:%" PRIu32 ", media ssrc:%" PRIu32 "]",
@@ -554,7 +554,7 @@ namespace RTC
 
 					default:
 					{
-						MS_WARN_TAG(
+						MS_DEBUG_TAG(
 						  rtcp,
 						  "ignoring unsupported %s Feedback packet "
 						  "[sender ssrc:%" PRIu32 ", media ssrc:%" PRIu32 "]",
@@ -581,7 +581,7 @@ namespace RTC
 
 					if (producer == nullptr)
 					{
-						MS_WARN_TAG(
+						MS_DEBUG_TAG(
 						  rtcp,
 						  "no Producer found for received Sender Report [ssrc:%" PRIu32 "]",
 						  report->GetSsrc());
@@ -608,7 +608,7 @@ namespace RTC
 
 					if (producer == nullptr)
 					{
-						MS_WARN_TAG(
+						MS_DEBUG_TAG(
 						  rtcp, "no Producer for received SDES chunk [ssrc:%" PRIu32 "]", chunk->GetSsrc());
 
 						continue;
@@ -627,7 +627,7 @@ namespace RTC
 
 			default:
 			{
-				MS_WARN_TAG(
+				MS_DEBUG_TAG(
 				  rtcp,
 				  "unhandled RTCP type received [type:%" PRIu8 "]",
 				  static_cast<uint8_t>(packet->GetType()));
