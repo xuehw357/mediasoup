@@ -162,16 +162,7 @@ namespace RTC
 		{
 			// Notify the listener so we'll get the worst remote fraction lost.
 			static_cast<RTC::RtpStreamRecv::Listener*>(this->listener)->OnRtpStreamNeedWorstRemoteFractionLost(this, worstRemoteFractionLost);
-
-			if (worstRemoteFractionLost > 0)
-			{
-				MS_DEBUG_TAG(
-					rtcp, "using worst remote fraction lost:%" PRIu8, worstRemoteFractionLost);
-			}
 		}
-
-		// TODO: Must use worstRemoteFractionLost to decrease both fractionLost and
-		// packetsLost in our RR.
 
 		auto report = new RTC::RTCP::ReceiverReport();
 
@@ -180,8 +171,6 @@ namespace RTC
 		// Calculate Packets Expected and Lost.
 		uint32_t expected = (this->cycles + this->maxSeq) - this->baseSeq + 1;
 		this->packetsLost = expected - this->transmissionCounter.GetPacketCount();
-
-		report->SetTotalLost(this->packetsLost);
 
 		// Calculate Fraction Lost.
 		uint32_t expectedInterval = expected - this->expectedPrior;
@@ -199,7 +188,32 @@ namespace RTC
 		else
 			this->fractionLost = (lostInterval << 8) / expectedInterval;
 
-		report->SetFractionLost(this->fractionLost);
+		// Worst remote fraction lost is not worse than local one.
+		if (worstRemoteFractionLost <= this->fractionLost)
+		{
+			report->SetTotalLost(this->packetsLost);
+			report->SetFractionLost(this->fractionLost);
+		}
+		else
+		{
+			// Recalculate packetsLost.
+			uint32_t newLostInterval     = (worstRemoteFractionLost * expectedInterval) >> 8;
+			uint32_t newReceivedInterval = expectedInterval - newLostInterval;
+			uint32_t newPacketLost       = this->packetsLost - (receivedInterval - newReceivedInterval);
+
+			// TMP.
+			MS_DEBUG_TAG(
+			  rtcp,
+			  "worst remote fraction lost is worst than local one. Local packetsLost/fractionLost:[%" PRIu32
+			  "/%" PRIu8 "]. Worst remote packetsLost/fractionLost:[%" PRIu32 "/%" PRIu8 "]",
+			  this->packetsLost,
+			  this->fractionLost,
+			  newPacketLost,
+			  worstRemoteFractionLost);
+
+			report->SetTotalLost(newPacketLost);
+			report->SetFractionLost(worstRemoteFractionLost);
+		}
 
 		// Fill the rest of the report.
 		report->SetLastSeq(static_cast<uint32_t>(this->maxSeq) + this->cycles);
