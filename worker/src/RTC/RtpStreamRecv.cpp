@@ -161,12 +161,12 @@ namespace RTC
 		if (this->params.useInBandFec)
 		{
 			// Notify the listener so we'll get the worst remote fraction lost.
-			static_cast<RTC::RtpStreamRecv::Listener*>(this->listener)
-			  ->OnRtpStreamNeedWorstRemoteFractionLost(this, worstRemoteFractionLost);
+			static_cast<RTC::RtpStreamRecv::Listener*>(this->listener)->OnRtpStreamNeedWorstRemoteFractionLost(this, worstRemoteFractionLost);
 
 			if (worstRemoteFractionLost > 0)
 			{
-				MS_DEBUG_TAG(rtcp, "using worst remote fraction lost:%" PRIu8, worstRemoteFractionLost);
+				MS_DEBUG_TAG(
+					rtcp, "using worst remote fraction lost:%" PRIu8, worstRemoteFractionLost);
 			}
 		}
 

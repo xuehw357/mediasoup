@@ -327,6 +327,9 @@ namespace RTC
 				totalScore += weight * score;
 			}
 
+			// clang-tidy "thinks" that this can lead to division by zero but we are
+			// smarter.
+			// NOLINTNEXTLINE(clang-analyzer-core.DivideZero)
 			this->score = static_cast<uint8_t>(std::round(totalScore / samples));
 		}
 		else
