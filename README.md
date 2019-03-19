@@ -1,10 +1,11 @@
+# mediasoup v3
+
 [![][mediasoup-banner]][mediasoup-website]
 
 [![][npm-shield-mediasoup]][npm-mediasoup]
 [![][travis-ci-shield-mediasoup]][travis-ci-mediasoup]
 [![][codacy-grade-shield-mediasoup]][codacy-grade-mediasoup]
 [![][opencollective-shield-mediasoup]][opencollective-mediasoup]
-
 
 
 ## Website and documentation
@@ -59,3 +60,4 @@ You can support **mediasoup** by making a donation in [open collective][opencoll
 [codacy-grade-mediasoup]: https://www.codacy.com/app/versatica/mediasoup
 [opencollective-shield-mediasoup]: https://img.shields.io/opencollective/all/mediasoup.svg
 [opencollective-mediasoup]: https://opencollective.com/mediasoup/donate
+
